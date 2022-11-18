@@ -52,6 +52,7 @@ import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
+import nl.narvekar.abhishek.student649744.viewModel.PAGE_SIZE_Articles
 import okhttp3.Route
 
 @Composable
@@ -63,7 +64,8 @@ fun HomeScreen(
 ) {
     Student649744Theme {
         val loading = viewModel.progressBar.value
-
+        val articles1 = viewModel.articleListResponse.results
+        val page = viewModel.page.value
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
@@ -76,16 +78,18 @@ fun HomeScreen(
             },
             content = { innerPadding ->
                 LazyColumn(Modifier.padding(innerPadding)) {
-                    itemsIndexed(articles) { index, article ->
-//                        viewModel.onChangeScrollPosition(index)
-//                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-//                            viewModel.nextPage()
-//                        }
+                    itemsIndexed(articles1) { index, article ->
+                        viewModel.onChangeArticleScrollPosition(index)
+                        if ((index + 1) >= (page * PAGE_SIZE_Articles) && !loading) {
+                            viewModel.nextPage()
+                        }
+
                         ArticleItem(article = article) {
                             navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
                         }
                     }
                 }
+
                 Row(Modifier.fillMaxWidth()) {
                     ProgressBarLoading(isLoading = loading)
                 }

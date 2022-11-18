@@ -13,30 +13,69 @@ import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 
-private const val PAGE_SIZE = 10
+const val PAGE_SIZE_Articles = 20
 
 class ArticleViewModel : ViewModel() {
 
     var articleListResponse: ArticleList by mutableStateOf(ArticleList())
     var errorMessage: String by mutableStateOf("")
     val progressBar = mutableStateOf(false)
-    var articleListScrollPosition = 0
+    val page = mutableStateOf(10)
+    private var articleListScrollPosition = 0
+    val apiService = NewsApi.getInstance()
+    init {
+        getArticlesByHeader()
+    }
 
     fun getArticlesByHeader() {
         viewModelScope.launch {
             progressBar.value = true
-            val apiService = NewsApi.getInstance()
             try {
-                //delay(7000)
-                val articles = apiService.getAllArticles()
+                val articles = apiService.getAllArticles(page.value)
                 articleListResponse = articles
                 progressBar.value = false
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
-
                 Log.d("Error: ", errorMessage)
             }
         }
+    }
+
+    fun nextPage() {
+        viewModelScope.launch {
+            // prevent duplicate happening too quickly
+            //delay(1000)
+            val apiService2 = NewsApi.getInstance()
+            if ((articleListScrollPosition + 1) >= (page.value + PAGE_SIZE_Articles)) {
+                Log.d(TAG, "nextPage: $articleListScrollPosition")
+                progressBar.value = true
+                incrementPage()
+                Log.d(TAG, "nextPage triggered: ${page.value}")
+                delay(1000)
+
+                if (page.value > 10) {
+                    val result = apiService2.getAllArticles(page.value)
+                    Log.d(TAG, "nextPage: ${result}")
+                    appendArticles(result.results)
+                }
+                progressBar.value = false
+            }
+        }
+    }
+
+    // append new recipes to the current list of recipes
+    private fun appendArticles(articles: List<Article>) {
+        val current = ArrayList(this.articleListResponse.results)
+        current.addAll(articles)
+        this.articleListResponse.results = current
+    }
+
+    private fun incrementPage() {
+        page.value = page.value + 1
+    }
+
+    fun onChangeArticleScrollPosition(position: Int) {
+        articleListScrollPosition = position
     }
 
     fun likeArticle(authToken: String, id: Int) {

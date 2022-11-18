@@ -23,7 +23,10 @@ interface NewsApi {
     suspend fun getArticleById(@Path("id") Id: Int) : ArticleList
 
     @GET("api/Articles")
-    suspend fun getAllArticles() : ArticleList
+    suspend fun getAllArticles(@Query("count") count: Int) : ArticleList
+
+    @GET("api/Articles/")
+    suspend fun getAllArticlesPaging(@Query("count") count: Int) : ArticleList
 
     @GET("api/Articles/liked")
     suspend fun getAllLikedArticles(@Header("x-authToken") authToken: String) : ArticleList

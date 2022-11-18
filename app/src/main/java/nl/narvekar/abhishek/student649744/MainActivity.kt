@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
                     NavigationScreen(sharedPreferences, articleViewModel, favoritesViewModel, authToken, articleDetailViewModel)
 
-                    articleViewModel.getArticlesByHeader()
+                    //articleViewModel.getArticlesByHeader()
                     favoritesViewModel.getFavoriteArticles(authToken)
                 }
             }
