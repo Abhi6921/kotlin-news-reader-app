@@ -1,59 +1,33 @@
 package nl.narvekar.abhishek.student649744.fragments
 
 import android.content.SharedPreferences
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
-import android.service.autofill.OnClickAction
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
-import coil.compose.rememberImagePainter
-import kotlinx.coroutines.flow.first
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
-import nl.narvekar.abhishek.student649744.data.ArticleList
-import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
-import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
-import okhttp3.Route
 
 @Composable
 fun HomeScreen(
@@ -62,12 +36,14 @@ fun HomeScreen(
     viewModel: ArticleViewModel
 ) {
     Student649744Theme {
-        val articles1 = viewModel.articles.collectAsLazyPagingItems()
+        val articles = viewModel.articles.collectAsLazyPagingItems()
+
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
                 sharedPreferences = sharedPreferences,
-                title = "News Articles"
+                title = "News Articles",
+                viewModel
             )
         },
             bottomBar = {
@@ -75,7 +51,7 @@ fun HomeScreen(
             },
             content = { innerPadding ->
                 LazyColumn(Modifier.padding(innerPadding)) {
-                    itemsIndexed(articles1) { index, article ->
+                    items(articles) { article ->
 
                         if (article != null) {
                             ArticleItem(article = article) {
@@ -84,12 +60,13 @@ fun HomeScreen(
                         }
                     }
                 }
-                articles1.apply {
+                articles.apply {
                     when {
                         loadState.refresh is LoadState.Loading -> {
                             Row(Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
+                                Spacer(modifier = Modifier.height(20.dp))
                                 CircularProgressIndicator()
                             }
                         }
@@ -114,8 +91,10 @@ fun HomeScreen(
 fun TopAppBarForArticles(
     navController: NavController,
     sharedPreferences: SharedPreferences,
-    title: String
+    title: String,
+    viewModel: ArticleViewModel
 ) {
+    val articles = viewModel.articles.collectAsLazyPagingItems()
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
         title = {
@@ -126,7 +105,7 @@ fun TopAppBarForArticles(
 
         }, actions = {
             IconButton(onClick = {
-                //loadData(viewModel)
+               articles.refresh()
             }) {
                 // refresh icon here
                 Icon(Icons.Filled.Refresh, null)
@@ -155,7 +134,7 @@ fun ArticleItem(
             //.wrapContentHeight(align = Alignment.Top)
             .clickable { onClickAction(article) },
         elevation = 8.dp,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.primarySurface,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -163,7 +142,7 @@ fun ArticleItem(
             horizontalArrangement = Arrangement.Start
         ) {
             ProfilePictureArticle(article, 70.dp)
-            Text(text = article.Title, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primarySurface)
+            Text(text = article.Title, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.onPrimary)
         }
     }
 }

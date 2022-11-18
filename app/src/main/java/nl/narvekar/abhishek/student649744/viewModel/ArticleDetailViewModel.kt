@@ -15,11 +15,11 @@ class ArticleDetailViewModel : ViewModel() {
     var articleResponse: ArticleList by mutableStateOf(ArticleList())
     var errorMessage: String by mutableStateOf("")
 
-    fun getArticleById(Id: Int) : ArticleList {
+    fun getArticleById(authToken: String, Id: Int) : ArticleList {
         viewModelScope.launch(Dispatchers.IO) {
             val apiService = NewsApi.getInstance()
             try {
-                val article = apiService.getArticleById(Id)
+                val article = apiService.getArticleById(authToken, Id)
                 articleResponse = article
             }catch (e: Exception) {
                 errorMessage = e.message.toString()

@@ -20,7 +20,7 @@ interface NewsApi {
     fun postANewUser(@Body user: User?) : Call<RegisterUserResponse>
 
     @GET("api/Articles/{id}")
-    suspend fun getArticleById(@Path("id") Id: Int) : ArticleList
+    suspend fun getArticleById(@Header("x-authToken") authToken: String, @Path("id") Id: Int) : ArticleList
 
     @GET("api/Articles")
     suspend fun getAllArticles(@Query("count") count: Int) : ArticleList

@@ -13,7 +13,7 @@ class ArticlePager: PagingSource<Int, Article>() {
 
     private val api = NewsApi.getInstance()
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
-        return state.anchorPosition
+        return null
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {

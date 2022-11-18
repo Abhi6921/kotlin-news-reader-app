@@ -42,7 +42,8 @@ fun FavoritesScreen(
         TopAppBarForArticles(
             navController = navController,
             sharedPreferences = sharedPreferences,
-            title = "Favorites"
+            title = "Favorites",
+            articleViewModel
         )
     },
         bottomBar = {
@@ -84,7 +85,7 @@ fun FavoritesArticleItem(
             .fillMaxWidth()
             .clickable { onClickAction(article) },
         elevation = 8.dp,
-        backgroundColor = Color.White
+        backgroundColor = MaterialTheme.colors.primarySurface
     ) {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -94,7 +95,7 @@ fun FavoritesArticleItem(
             Text(
                 text = article.Title,
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.primarySurface
+                color = MaterialTheme.colors.onPrimary
             )
         }
         Row(
@@ -116,51 +117,3 @@ fun FavoritesArticleItem(
     }
 
 }
-
-//@Composable
-//fun ArticleItem(
-//    article: Article,
-//    onClickAction: (Article) -> Unit,
-//) {
-//    Card(
-//        modifier = Modifier
-//            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-//            .fillMaxWidth()
-//            //.wrapContentHeight(align = Alignment.Top)
-//            .clickable { onClickAction(article) },
-//        elevation = 8.dp,
-//        backgroundColor = Color.White,
-//    ) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.Start
-//        ) {
-//            ProfilePictureArticle(article, 70.dp)
-//            Text(text = article.Title, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primarySurface)
-//        }
-//    }
-//}
-
-//{
-//        Surface() {
-//            if (articles.isEmpty()) {
-//                Column(
-//                    modifier = Modifier.fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    Text(text = "No favorite articles")
-//                }
-//            }
-//           else {
-//                LazyColumn {
-//                    items(articles) { article ->
-//                        FavoritesArticleItem(article = article) {
-//                            navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }

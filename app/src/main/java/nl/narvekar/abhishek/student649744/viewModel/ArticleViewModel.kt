@@ -12,8 +12,4 @@ class ArticleViewModel : ViewModel() {
         ArticlePager()
     }.flow.cachedIn(viewModelScope)
 
-
-
-
-
 }
