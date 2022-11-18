@@ -49,6 +49,7 @@ fun ArticleDetailScreen(
     articleViewModel: ArticleViewModel,
    articleDetailViewModel: ArticleDetailViewModel
 ) {
+    // some changes
     val scrollState = rememberScrollState()
 
     val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
