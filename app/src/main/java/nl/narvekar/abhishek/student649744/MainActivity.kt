@@ -41,8 +41,6 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
                     NavigationScreen(sharedPreferences, articleViewModel, favoritesViewModel, authToken, articleDetailViewModel)
-
-                    //articleViewModel.getArticlesByHeader()
                     favoritesViewModel.getFavoriteArticles(authToken)
                 }
             }

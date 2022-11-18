@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import androidx.paging.compose.itemsIndexed
@@ -52,20 +53,16 @@ import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
-import nl.narvekar.abhishek.student649744.viewModel.PAGE_SIZE_Articles
 import okhttp3.Route
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     sharedPreferences: SharedPreferences,
-    articles: List<Article>,
     viewModel: ArticleViewModel
 ) {
     Student649744Theme {
-        val loading = viewModel.progressBar.value
-        val articles1 = viewModel.articleListResponse.results
-        val page = viewModel.page.value
+        val articles1 = viewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
@@ -79,19 +76,33 @@ fun HomeScreen(
             content = { innerPadding ->
                 LazyColumn(Modifier.padding(innerPadding)) {
                     itemsIndexed(articles1) { index, article ->
-                        viewModel.onChangeArticleScrollPosition(index)
-                        if ((index + 1) >= (page * PAGE_SIZE_Articles) && !loading) {
-                            viewModel.nextPage()
-                        }
 
-                        ArticleItem(article = article) {
-                            navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
+                        if (article != null) {
+                            ArticleItem(article = article) {
+                                navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
+                            }
                         }
                     }
                 }
-
-                Row(Modifier.fillMaxWidth()) {
-                    ProgressBarLoading(isLoading = loading)
+                articles1.apply {
+                    when {
+                        loadState.refresh is LoadState.Loading -> {
+                            Row(Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                        loadState.append is LoadState.Loading -> {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.Bottom
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
                 }
             }
         )

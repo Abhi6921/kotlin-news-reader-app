@@ -37,6 +37,7 @@ import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
+import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -48,11 +49,10 @@ fun ArticleDetailScreen(
     navController: NavController,
     detailId: Int,
     sharedPreferences: SharedPreferences,
-    articles: List<Article>,
-    articleViewModel: ArticleViewModel,
+    favoritesViewModel: FavoritesViewModel,
    articleDetailViewModel: ArticleDetailViewModel
 ) {
-    // some changes
+
     val scrollState = rememberScrollState()
 
     val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
@@ -95,7 +95,7 @@ fun ArticleDetailScreen(
                 fontWeight = FontWeight.Bold
             )
             
-            FavoriteButton(articleViewModel, sharedPreferences, article)
+            FavoriteButton(favoritesViewModel, sharedPreferences, article)
 
             Divider(modifier = Modifier.padding(bottom = 4.dp))
             Text(
@@ -137,7 +137,7 @@ fun ArticleDetailScreen(
 
 @Composable
 fun FavoriteButton(
-    articleViewModel: ArticleViewModel,
+    favoritesViewModel: FavoritesViewModel,
     sharedPreferences: SharedPreferences,
     article: Article
 ) {
@@ -148,20 +148,19 @@ fun FavoriteButton(
 
     val context = LocalContext.current
 
-    var output = ""
     IconButton(
         onClick = {
             isFavorite = !isFavorite
             if (isFavorite) {
-                articleViewModel.likeArticle(authToken, article.Id)
+                favoritesViewModel.likeArticle(authToken, article.Id)
                 Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
             } else {
-                articleViewModel.removeArticle(authToken, article.Id)
+                favoritesViewModel.removeArticle(authToken, article.Id)
                 Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
             }
         }
     ) {
-        Icon(imageVector = if (isFavorite || output.isNotEmpty()) { Icons.Filled.Favorite } else { Icons.Filled.FavoriteBorder }, contentDescription = "favorite icon")
+        Icon(imageVector = if (isFavorite) { Icons.Filled.Favorite } else { Icons.Filled.FavoriteBorder }, contentDescription = "favorite icon")
     }
 }
 
