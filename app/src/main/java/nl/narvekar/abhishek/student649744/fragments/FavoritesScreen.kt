@@ -42,8 +42,7 @@ fun FavoritesScreen(
         TopAppBarForArticles(
             navController = navController,
             sharedPreferences = sharedPreferences,
-            title = "Favorites",
-            articleViewModel
+            title = "Favorites"
         )
     },
         bottomBar = {

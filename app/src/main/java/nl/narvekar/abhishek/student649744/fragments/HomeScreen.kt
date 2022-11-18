@@ -1,6 +1,7 @@
 package nl.narvekar.abhishek.student649744.fragments
 
 import android.content.SharedPreferences
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.service.autofill.OnClickAction
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -62,12 +63,12 @@ fun HomeScreen(
 ) {
     Student649744Theme {
         val loading = viewModel.progressBar.value
+
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
                 sharedPreferences = sharedPreferences,
-                title = "News Articles",
-                viewModel
+                title = "News Articles"
             )
         },
             bottomBar = {
@@ -75,7 +76,11 @@ fun HomeScreen(
             },
             content = { innerPadding ->
                 LazyColumn(Modifier.padding(innerPadding)) {
-                    items(articles) { article ->
+                    itemsIndexed(articles) { index, article ->
+//                        viewModel.onChangeScrollPosition(index)
+//                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+//                            viewModel.nextPage()
+//                        }
                         ArticleItem(article = article) {
                             navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
                         }
@@ -94,8 +99,7 @@ fun HomeScreen(
 fun TopAppBarForArticles(
     navController: NavController,
     sharedPreferences: SharedPreferences,
-    title: String,
-    viewModel: ArticleViewModel
+    title: String
 ) {
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
