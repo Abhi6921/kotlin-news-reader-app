@@ -1,24 +1,28 @@
 package nl.narvekar.abhishek.student649744.viewModel
 
+import android.content.SharedPreferences
+import androidx.compose.ui.platform.LocalContext
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import nl.narvekar.abhishek.student649744.Constants
+import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 import nl.narvekar.abhishek.student649744.data.ArticleMapper
 
-class ArticlePager: PagingSource<Int, Article>() {
+class ArticlePager(var authToken: String): PagingSource<Int, Article>() {
 
     private val articleMapper = ArticleMapper()
+    lateinit var sharedPreferences: SharedPreferences
 
     private val api = NewsApi.getInstance()
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
         return null
     }
-
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
-
         val nextPage = params.key ?: 1
+
         val result = fetch(nextPage, params.loadSize)
             .getOrElse {
                 return LoadResult.Error(it)
@@ -27,7 +31,8 @@ class ArticlePager: PagingSource<Int, Article>() {
     }
 
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
-        val response = api.getAllArticlesPaging(startkey * loadSize)
+
+        val response = api.getAllArticlesPaging(authToken,startkey * loadSize)
 
         return when {
             response.isSuccessful -> {
@@ -41,6 +46,7 @@ class ArticlePager: PagingSource<Int, Article>() {
             else -> Result.failure(IllegalStateException("something went wrong"))
         }
     }
+
 
 
 }

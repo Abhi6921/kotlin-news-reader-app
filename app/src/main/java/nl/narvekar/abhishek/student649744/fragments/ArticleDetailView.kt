@@ -76,8 +76,6 @@ fun ArticleDetailScreen(
                     }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
-                }, actions = {
-
                 })
 
         if (article != null) {
@@ -133,6 +131,9 @@ fun ArticleDetailScreen(
                 style = MaterialTheme.typography.body1,
                 fontFamily = FontFamily.Monospace
             )
+        }
+        else {
+            Text(text = "This article has no description", fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
         }
     }
 }

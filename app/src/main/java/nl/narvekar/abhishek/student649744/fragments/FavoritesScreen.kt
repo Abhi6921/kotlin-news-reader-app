@@ -108,7 +108,7 @@ fun FavoritesArticleItem(
                 //Spacer(modifier = Modifier.height(25.dp))
                 Icon(
                     imageVector = Icons.Filled.Favorite,
-                    contentDescription = null
+                    contentDescription = "favorite icon"
                 )
             }
 

@@ -1,6 +1,8 @@
 package nl.narvekar.abhishek.student649744.fragments
 
+import android.content.ContentValues.TAG
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -21,6 +24,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
+import nl.narvekar.abhishek.student649744.Constants
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
@@ -37,7 +41,6 @@ fun HomeScreen(
 ) {
     Student649744Theme {
         val articles = viewModel.articles.collectAsLazyPagingItems()
-
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
@@ -52,11 +55,11 @@ fun HomeScreen(
             content = { innerPadding ->
                 LazyColumn(Modifier.padding(innerPadding)) {
                     items(articles) { article ->
-
                         if (article != null) {
-                            ArticleItem(article = article) {
+                            ArticleItem(article = article, isLiked = article.IsLiked) {
                                 navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
                             }
+
                         }
                     }
                 }
@@ -124,9 +127,10 @@ fun TopAppBarForArticles(
 
 @Composable
 fun ArticleItem(
-    article: Article,
-    onClickAction: (Article) -> Unit,
-    ) {
+   article: Article,
+   isLiked: Boolean,
+   onClickAction: (Article) -> Unit
+   ) {
     Card(
         modifier = Modifier
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
@@ -142,10 +146,28 @@ fun ArticleItem(
             horizontalArrangement = Arrangement.Start
         ) {
             ProfilePictureArticle(article, 70.dp)
-            Text(text = article.Title, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.onPrimary)
+            Text(
+                text = article.Title,
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.onPrimary
+            )
+        }
+        if (isLiked) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Column() {
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "favorite icon"
+                    )
+                }
+            }
         }
     }
 }
+
 
 @Composable
 fun ProfilePictureArticle(article: Article, profilePicSize: Dp) {
@@ -159,7 +181,7 @@ fun ProfilePictureArticle(article: Article, profilePicSize: Dp) {
             contentDescription = "",
             modifier = Modifier.size(profilePicSize),
             contentScale = ContentScale.Crop,
-            error = painterResource(R.drawable.placeholder)
+            placeholder = painterResource(R.drawable.placeholder)
         )
     }
 }
