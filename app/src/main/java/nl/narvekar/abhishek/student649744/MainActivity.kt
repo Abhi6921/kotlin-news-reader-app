@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.Constants.PREF_KEY
 import nl.narvekar.abhishek.student649744.navigation.NavigationScreen
@@ -26,7 +27,8 @@ import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
 class MainActivity : ComponentActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
-    val articleViewModel by viewModels<ArticleViewModel>()
+    //val articleViewModel by viewModels<ArticleViewModel>()
+
     val favoritesViewModel by viewModels<FavoritesViewModel>()
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
 
@@ -40,9 +42,10 @@ class MainActivity : ComponentActivity() {
             Student649744Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+
+                    val articleViewModel = ArticleViewModel(authToken)
                     NavigationScreen(sharedPreferences, articleViewModel, favoritesViewModel, authToken, articleDetailViewModel)
 
-                    articleViewModel.getArticlesByHeader()
                     favoritesViewModel.getFavoriteArticles(authToken)
                 }
             }

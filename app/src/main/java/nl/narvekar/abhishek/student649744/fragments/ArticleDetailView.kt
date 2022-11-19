@@ -19,9 +19,11 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -31,9 +33,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
+import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
+import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -45,13 +49,15 @@ fun ArticleDetailScreen(
     navController: NavController,
     detailId: Int,
     sharedPreferences: SharedPreferences,
-    articles: List<Article>,
-    articleViewModel: ArticleViewModel,
+    favoritesViewModel: FavoritesViewModel,
    articleDetailViewModel: ArticleDetailViewModel
 ) {
+
     val scrollState = rememberScrollState()
 
-    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
+    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
+
+    val article: Article? = articleDetailViewModel.getArticleById(authToken, detailId).results.firstOrNull()
 
     val uriHandler = LocalUriHandler.current
     Column(
@@ -70,8 +76,6 @@ fun ArticleDetailScreen(
                     }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
-                }, actions = {
-
                 })
 
         if (article != null) {
@@ -80,7 +84,8 @@ fun ArticleDetailScreen(
                 model = article.Image,
                 contentDescription = "Article Image",
                 modifier = Modifier.size(500.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                error =  painterResource(R.drawable.placeholder)
             )
             Text(
                 text = article.Title,
@@ -90,7 +95,7 @@ fun ArticleDetailScreen(
                 fontWeight = FontWeight.Bold
             )
             
-            FavoriteButton(articleViewModel, sharedPreferences, article)
+            FavoriteButton(favoritesViewModel, sharedPreferences, article)
 
             Divider(modifier = Modifier.padding(bottom = 4.dp))
             Text(
@@ -127,12 +132,15 @@ fun ArticleDetailScreen(
                 fontFamily = FontFamily.Monospace
             )
         }
+        else {
+            Text(text = "This article has no description", fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
+        }
     }
 }
 
 @Composable
 fun FavoriteButton(
-    articleViewModel: ArticleViewModel,
+    favoritesViewModel: FavoritesViewModel,
     sharedPreferences: SharedPreferences,
     article: Article
 ) {
@@ -143,20 +151,19 @@ fun FavoriteButton(
 
     val context = LocalContext.current
 
-    var output = ""
     IconButton(
         onClick = {
             isFavorite = !isFavorite
             if (isFavorite) {
-                articleViewModel.likeArticle(authToken, article.Id)
+                favoritesViewModel.likeArticle(authToken, article.Id)
                 Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
             } else {
-                articleViewModel.removeArticle(authToken, article.Id)
+                favoritesViewModel.removeArticle(authToken, article.Id)
                 Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
             }
         }
     ) {
-        Icon(imageVector = if (isFavorite || output.isNotEmpty()) { Icons.Filled.Favorite } else { Icons.Filled.FavoriteBorder }, contentDescription = "favorite icon")
+        Icon(imageVector = if (isFavorite) { Icons.Filled.Favorite } else { Icons.Filled.FavoriteBorder }, contentDescription = "favorite icon")
     }
 }
 

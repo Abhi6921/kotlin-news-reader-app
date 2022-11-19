@@ -23,9 +23,37 @@ class FavoritesViewModel : ViewModel() {
                 favoritesListResponse = articles
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
-                //Log.d("Error:  $errorMessage")
                 Log.d("Error: ", errorMessage)
             }
+        }
+    }
+
+    fun likeArticle(authToken: String, id: Int) {
+        viewModelScope.launch {
+            val apiService = NewsApi.getInstance()
+            val response = apiService.addLikedArticle(authToken, id)
+
+            if (response.isSuccessful) {
+                Log.d("Added to like article", "article liked")
+            }
+            else {
+                Log.d("Liked Article Error", response.code().toString())
+            }
+        }
+    }
+
+    fun removeArticle(authToken: String, id: Int) {
+        viewModelScope.launch {
+            val apiService = NewsApi.getInstance()
+            val response = apiService.removeLikedArticle(authToken, id)
+
+            if (response.isSuccessful) {
+                Log.d("Successful", "article removed")
+            }
+            else {
+                Log.d("Delete Article ERROR", response.code().toString())
+            }
+
         }
     }
 }

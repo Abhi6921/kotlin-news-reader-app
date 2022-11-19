@@ -47,7 +47,6 @@ fun NavigationScreen(
             HomeScreen(
                 navController,
                 sharedPreferences,
-                viewModel.articleListResponse.results,
                 viewModel
             )
         }
@@ -61,8 +60,7 @@ fun NavigationScreen(
                 navController,
                 navBackStackEntry.arguments!!.getInt(ARTICLE_ID_KEY),
                 sharedPreferences,
-                viewModel.articleListResponse.results,
-                viewModel,
+                favoritesViewModel,
                 articleDetailViewModel
             )
         }

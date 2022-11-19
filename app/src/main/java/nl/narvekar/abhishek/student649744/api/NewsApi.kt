@@ -20,13 +20,16 @@ interface NewsApi {
     fun postANewUser(@Body user: User?) : Call<RegisterUserResponse>
 
     @GET("api/Articles/{id}")
-    suspend fun getArticleById(@Path("id") Id: Int) : ArticleList
+    suspend fun getArticleById(@Header("x-authtoken") authToken: String, @Path("id") Id: Int) : ArticleList
 
     @GET("api/Articles")
-    suspend fun getAllArticles() : ArticleList
+    suspend fun getAllArticles(@Query("count") count: Int) : ArticleList
+
+    @GET("api/Articles")
+    suspend fun getAllArticlesPaging(@Header("x-authtoken") authToken: String, @Query("count") count: Int) : Response<ArticleList>
 
     @GET("api/Articles/liked")
-    suspend fun getAllLikedArticles(@Header("x-authToken") authToken: String) : ArticleList
+    suspend fun getAllLikedArticles(@Header("x-authtoken") authToken: String) : ArticleList
 
     @PUT("api/articles/{id}/like")
     suspend fun addLikedArticle(
