@@ -45,7 +45,7 @@ fun LoginScreen(
     navController: NavController,
     sharedPreferences: SharedPreferences
 ) {
-
+    // Commit from login code refactor branch
     Column(
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.Center,
