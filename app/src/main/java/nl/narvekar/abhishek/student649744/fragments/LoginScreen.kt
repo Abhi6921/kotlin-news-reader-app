@@ -33,6 +33,7 @@ import nl.narvekar.abhishek.student649744.data.User
 import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Purple700
+import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,7 +44,8 @@ import retrofit2.Response
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    sharedPreferences: SharedPreferences
+    sharedPreferences: SharedPreferences,
+    loginViewModel: LoginViewModel
 ) {
     // Commit from login code refactor branch
     Column(
@@ -81,7 +83,7 @@ fun LoginScreen(
                         Toast.makeText(context, "please fill credentials!", Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        loginUser(context,
+                        loginViewModel.loginUser(context,
                             User(
                                 username.value.text.toString(),
                                 password.value.text.toString()
@@ -120,39 +122,39 @@ fun LoginScreen(
     }
 }
 
-private fun loginUser(
-    context: Context,
-    user: User,
-    navController: NavController,
-    sharedPreferences: SharedPreferences
-) {
-    val retrofitInstance = NewsApi.getInstance()
-
-    retrofitInstance.loginUser(user).enqueue(
-        object : Callback<LoginResponse> {
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-
-                val authToken = response.body()?.AuthToken
-                //print(authToken)
-                val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                editor.putString(AUTH_TOKEN_KEY, authToken)
-                editor.apply()
-                if (response.code() == 200) {
-                    Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Login.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-                else {
-                    Toast.makeText(context, "Login failure!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-}
+//private fun loginUser(
+//    context: Context,
+//    user: User,
+//    navController: NavController,
+//    sharedPreferences: SharedPreferences
+//) {
+//    val retrofitInstance = NewsApi.getInstance()
+//
+//    retrofitInstance.loginUser(user).enqueue(
+//        object : Callback<LoginResponse> {
+//            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+//                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+//
+//                val authToken = response.body()?.AuthToken
+//                //print(authToken)
+//                val editor: SharedPreferences.Editor = sharedPreferences.edit()
+//                editor.putString(AUTH_TOKEN_KEY, authToken)
+//                editor.apply()
+//                if (response.code() == 200) {
+//                    Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+//
+//                    navController.navigate(Routes.Home.route) {
+//                        popUpTo(Routes.Login.route) {
+//                            inclusive = true
+//                        }
+//                    }
+//                }
+//                else {
+//                    Toast.makeText(context, "Login failure!", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
+//}

@@ -26,6 +26,8 @@ import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
 import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
+import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
+import kotlin.math.log
 
 @Composable
 fun FavoritesScreen(
@@ -33,17 +35,19 @@ fun FavoritesScreen(
     sharedPreferences: SharedPreferences,
     articles: List<Article>,
     articleViewModel: ArticleViewModel,
-    viewModel: FavoritesViewModel
+    favoritesViewModel: FavoritesViewModel,
+    loginViewModel: LoginViewModel
 ) {
     val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-    viewModel.getFavoriteArticles(authToken)
+    favoritesViewModel.getFavoriteArticles(authToken)
 
     Scaffold(topBar = {
         TopAppBarForArticles(
             navController = navController,
             sharedPreferences = sharedPreferences,
             title = "Favorites",
-            articleViewModel
+            articleViewModel,
+            loginViewModel
         )
     },
         bottomBar = {

@@ -32,21 +32,24 @@ import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
+import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     sharedPreferences: SharedPreferences,
-    viewModel: ArticleViewModel
+    articleViewModel: ArticleViewModel,
+    loginViewModel: LoginViewModel
 ) {
     Student649744Theme {
-        val articles = viewModel.articles.collectAsLazyPagingItems()
+        val articles = articleViewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
                 sharedPreferences = sharedPreferences,
                 title = "News Articles",
-                viewModel
+                articleViewModel,
+                loginViewModel
             )
         },
             bottomBar = {
@@ -59,7 +62,6 @@ fun HomeScreen(
                             ArticleItem(article = article, isLiked = article.IsLiked) {
                                 navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
                             }
-
                         }
                     }
                 }
@@ -82,6 +84,15 @@ fun HomeScreen(
                                 CircularProgressIndicator()
                             }
                         }
+                        loadState.append is LoadState.Error -> {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(text = "error loading from api")
+                            }
+                        }
                     }
                 }
             }
@@ -95,9 +106,10 @@ fun TopAppBarForArticles(
     navController: NavController,
     sharedPreferences: SharedPreferences,
     title: String,
-    viewModel: ArticleViewModel
+    articleViewModel: ArticleViewModel,
+    loginViewModel: LoginViewModel
 ) {
-    val articles = viewModel.articles.collectAsLazyPagingItems()
+    val articles = articleViewModel.articles.collectAsLazyPagingItems()
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
         title = {
@@ -114,10 +126,7 @@ fun TopAppBarForArticles(
                 Icon(Icons.Filled.Refresh, null)
             }
             IconButton(onClick = {
-                logout(
-                    sharedPreferences = sharedPreferences,
-                    navController = navController
-                )
+                loginViewModel.logout(sharedPreferences, navController)
             }) {
                 Icon(Icons.Filled.ExitToApp, contentDescription = null)
             }
@@ -187,19 +196,19 @@ fun ProfilePictureArticle(article: Article, profilePicSize: Dp) {
 }
 
 
-fun logout(
-    sharedPreferences: SharedPreferences,
-    navController: NavController
-) {
-    // clear authToken
-    val editor = sharedPreferences.edit()
-    editor.putString(AUTH_TOKEN_KEY, "")
-    editor.clear()
-    editor.apply()
-
-    navController.navigate(Routes.Login.route) {
-        popUpTo(Routes.Home.route) {
-            inclusive = true
-        }
-    }
-}
+//fun logout(
+//    sharedPreferences: SharedPreferences,
+//    navController: NavController
+//) {
+//    // clear authToken
+//    val editor = sharedPreferences.edit()
+//    editor.putString(AUTH_TOKEN_KEY, "")
+//    editor.clear()
+//    editor.apply()
+//
+//    navController.navigate(Routes.Login.route) {
+//        popUpTo(Routes.Home.route) {
+//            inclusive = true
+//        }
+//    }
+//}

@@ -12,9 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.fragments.*
-import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
-import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
-import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
+import nl.narvekar.abhishek.student649744.viewModel.*
 
 const val ARTICLE_ID_KEY = "Id"
 
@@ -25,7 +23,9 @@ fun NavigationScreen(
     viewModel: ArticleViewModel,
     favoritesViewModel: FavoritesViewModel,
     authToken: String,
-    articleDetailViewModel: ArticleDetailViewModel
+    articleDetailViewModel: ArticleDetailViewModel,
+    loginViewModel: LoginViewModel,
+    registerViewModel: RegisterViewModel
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -35,19 +35,22 @@ fun NavigationScreen(
         composable(route = Routes.Login.route) {
             LoginScreen(
                 navController = navController,
-                sharedPreferences = sharedPreferences
+                sharedPreferences = sharedPreferences,
+                loginViewModel = loginViewModel
             )
         }
         composable(route = Routes.Register.route) {
             RegisterScreen(
-                navController = navController
+                navController = navController,
+                registerViewModel = registerViewModel
             )
         }
         composable(route = Routes.Home.route) {
             HomeScreen(
                 navController,
                 sharedPreferences,
-                viewModel
+                viewModel,
+                loginViewModel
             )
         }
         composable(
@@ -71,7 +74,8 @@ fun NavigationScreen(
                 sharedPreferences,
                 favoritesViewModel.favoritesListResponse.results,
                 viewModel,
-                favoritesViewModel
+                favoritesViewModel,
+                loginViewModel
             )
         }
     }

@@ -2,9 +2,7 @@ package nl.narvekar.abhishek.student649744.fragments.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +22,7 @@ fun SuccessDialog(setShowDialog: (Boolean) -> Unit) {
     Dialog(onDismissRequest = { /*TODO*/ }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color.White
+            color = MaterialTheme.colors.primary
         ) {
             Box(
                 contentAlignment = Alignment.Center
@@ -40,14 +38,17 @@ fun SuccessDialog(setShowDialog: (Boolean) -> Unit) {
                             style = TextStyle(
                                 fontSize = 24.sp,
                                 fontFamily = FontFamily.Default,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.onPrimary
                             ),
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
                             Button(onClick = {
                                 setShowDialog(false)
-                            }) {
+                            },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant)
+                            ) {
                                 Text(text = "OK")
                             }
                         }

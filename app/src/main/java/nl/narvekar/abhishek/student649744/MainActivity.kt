@@ -20,17 +20,15 @@ import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.Constants.PREF_KEY
 import nl.narvekar.abhishek.student649744.navigation.NavigationScreen
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
-import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
-import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
-import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
+import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
-    //val articleViewModel by viewModels<ArticleViewModel>()
-
     val favoritesViewModel by viewModels<FavoritesViewModel>()
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
+    val loginViewModel by viewModels<LoginViewModel>()
+    val registerViewModel by viewModels<RegisterViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +42,15 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 
                     val articleViewModel = ArticleViewModel(authToken)
-                    NavigationScreen(sharedPreferences, articleViewModel, favoritesViewModel, authToken, articleDetailViewModel)
+
+                    NavigationScreen(
+                        sharedPreferences,
+                        articleViewModel,
+                        favoritesViewModel,
+                        authToken,
+                        articleDetailViewModel,
+                        loginViewModel,
+                        registerViewModel)
 
                     favoritesViewModel.getFavoriteArticles(authToken)
                 }
