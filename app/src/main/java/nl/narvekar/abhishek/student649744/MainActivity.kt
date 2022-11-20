@@ -8,14 +8,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.Constants.PREF_KEY
 import nl.narvekar.abhishek.student649744.navigation.NavigationScreen
@@ -51,8 +53,6 @@ class MainActivity : ComponentActivity() {
                         articleDetailViewModel,
                         loginViewModel,
                         registerViewModel)
-
-                    favoritesViewModel.getFavoriteArticles(authToken)
                 }
             }
         }
@@ -68,6 +68,5 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     Student649744Theme {
-        Greeting("Android")
     }
 }

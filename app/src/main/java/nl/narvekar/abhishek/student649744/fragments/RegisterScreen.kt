@@ -88,7 +88,6 @@ fun RegisterScreen(
                                   ),
                                   navController
                               )
-                              showDialog.value = true
                           }
                 },
                 shape = RoundedCornerShape(50.dp),

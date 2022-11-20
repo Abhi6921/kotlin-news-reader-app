@@ -10,16 +10,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
-// https://dev.to/manojbhadane/android-custom-dialog-using-jetpack-compose-455m
 
-//@Preview(showBackground = true)
+
 @Composable
 fun SuccessDialog(setShowDialog: (Boolean) -> Unit) {
-    Dialog(onDismissRequest = { /*TODO*/ }) {
+
+    Dialog(onDismissRequest = {  }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colors.primary
@@ -45,11 +46,11 @@ fun SuccessDialog(setShowDialog: (Boolean) -> Unit) {
                         Spacer(modifier = Modifier.height(20.dp))
                         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
                             Button(onClick = {
-                                setShowDialog(false)
+                                //setShowDialog(false)
                             },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant)
                             ) {
-                                Text(text = "OK")
+                                Text(text = "Continue to login")
                             }
                         }
                     }

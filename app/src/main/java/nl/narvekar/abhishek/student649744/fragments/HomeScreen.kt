@@ -65,23 +65,32 @@ fun HomeScreen(
                         }
                     }
                 }
+                
                 articles.apply {
                     when {
                         loadState.refresh is LoadState.Loading -> {
                             Row(Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Spacer(modifier = Modifier.height(20.dp))
-                                CircularProgressIndicator()
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
                             }
                         }
                         loadState.append is LoadState.Loading -> {
                             Row(
                                 Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.Bottom
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                CircularProgressIndicator()
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
                             }
                         }
                         loadState.append is LoadState.Error -> {

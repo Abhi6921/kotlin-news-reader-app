@@ -17,10 +17,12 @@ class ArticlePager(var authToken: String): PagingSource<Int, Article>() {
     private val articleMapper = ArticleMapper()
 
     private val api = NewsApi.getInstance()
-    //private val retorfit = RetrofitInstance.buildService(NewsApi::class.java)
 
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
-        return null
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPageIndex = state.pages.indexOf(state.closestPageToPosition(anchorPosition))
+            state.pages.getOrNull(anchorPageIndex + 1)?.prevKey ?: state.pages.getOrNull(anchorPageIndex - 1)?.nextKey
+        }
     }
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         val nextPage = params.key ?: 1
@@ -34,7 +36,7 @@ class ArticlePager(var authToken: String): PagingSource<Int, Article>() {
 
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
 
-        val response = api.getAllArticlesPaging(authToken, startkey * loadSize)
+        val response = api.getAllArticles(authToken, startkey * loadSize)
 
         return when {
             response.isSuccessful -> {

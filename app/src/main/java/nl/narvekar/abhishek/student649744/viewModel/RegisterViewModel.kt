@@ -19,7 +19,6 @@ class RegisterViewModel : ViewModel() {
         user: User,
         navController: NavController
     ) {
-        //val retrofitInstance = RetrofitInstance.getRetrofitInstance().create(NewsApi::class.java)
         val retrofitInstance = NewsApi.getInstance()
 
         retrofitInstance.postANewUser(user).enqueue(object :
@@ -42,7 +41,7 @@ class RegisterViewModel : ViewModel() {
                     }
                 }
                 else {
-                    Toast.makeText(context, "Registration failure", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Registration failure: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
