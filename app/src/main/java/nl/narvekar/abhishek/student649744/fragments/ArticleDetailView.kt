@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -61,11 +62,9 @@ fun ArticleDetailScreen(
 
     val uriHandler = LocalUriHandler.current
 
-    Column(
-        modifier = Modifier
-            .verticalScroll(state = scrollState)
-    ) {
-        TopAppBar(
+    Scaffold(
+        topBar = {
+            TopAppBar(
                 elevation = 4.dp,
                 title = {
                     Text(text = "News Detail Screen")
@@ -78,65 +77,80 @@ fun ArticleDetailScreen(
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 })
+        },
+        content = {
+            Column(modifier = Modifier.verticalScroll(state = scrollState)) {
+                if (article != null) {
+                    AsyncImage(
+                        model = article.Image,
+                        contentDescription = "Article Image",
+                        modifier = Modifier.size(500.dp),
+                        contentScale = ContentScale.Crop,
+                        placeholder =  painterResource(R.drawable.placeholder)
+                    )
+                    Text(
+                        text = article.Title,
+                        modifier = Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.h6,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold
+                    )
 
-        if (article != null) {
+                    FavoriteButton(favoritesViewModel, sharedPreferences, article)
 
-            AsyncImage(
-                model = article.Image,
-                contentDescription = "Article Image",
-                modifier = Modifier.size(500.dp),
-                contentScale = ContentScale.Crop,
-                placeholder =  painterResource(R.drawable.placeholder)
-            )
-            Text(
-                text = article.Title,
-                modifier = Modifier.padding(4.dp),
-                style = MaterialTheme.typography.h6,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            )
-            
-            FavoriteButton(favoritesViewModel, sharedPreferences, article)
+                    Divider(modifier = Modifier.padding(bottom = 4.dp))
+                    Text(
+                        text = article.Summary,
+                        modifier = Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.body1,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Bold
+                    )
 
-            Divider(modifier = Modifier.padding(bottom = 4.dp))
-            Text(
-                text = article.Summary,
-                modifier = Modifier.padding(4.dp),
-                style = MaterialTheme.typography.body1,
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold
-            )
+                    Divider(modifier = Modifier.padding(bottom = 4.dp))
+                    //Text(text = "Full article at nos.nl")
+                    val text = "open in browser"
+                    ClickableText(
+                        text = AnnotatedString(text),
+                        style = TextStyle(
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = 16.sp
+                        ),
+                        onClick = {
+                            uriHandler.openUri(article.Url)
+                        },
+                    )
+                    Divider(modifier = Modifier.padding(bottom = 4.dp))
 
-            Divider(modifier = Modifier.padding(bottom = 4.dp))
-            //Text(text = "Full article at nos.nl")
-            val text = "open in browser"
-            ClickableText(
-                text = AnnotatedString(text),
-                style = TextStyle(
-                    color = MaterialTheme.colors.onSurface,
-                    fontSize = 16.sp
-                ),
-                onClick = {
-                    uriHandler.openUri(article.Url)
-                },
-            )
-            Divider(modifier = Modifier.padding(bottom = 4.dp))
+                    var articleDate = LocalDateTime.parse(article.PublishDate)
+                    var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
+                    var formattedArticleDate = articleDate.format(formatter)
 
-            var articleDate = LocalDateTime.parse(article.PublishDate)
-            var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
-            var formattedArticleDate = articleDate.format(formatter)
+                    Text(
+                        text = "Published on: $formattedArticleDate",
+                        modifier = Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.body1,
+                        fontFamily = FontFamily.Monospace
+                    )
 
-            Text(
-                text = "Published on: $formattedArticleDate",
-                modifier = Modifier.padding(4.dp),
-                style = MaterialTheme.typography.body1,
-                fontFamily = FontFamily.Monospace
-            )
+                }
+                else {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "This article has no description",
+                            fontFamily = FontFamily.SansSerif,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                }
+            }
         }
-        else {
-            Text(text = "This article has no description", fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
-        }
-    }
+    )
 }
 
 @Composable

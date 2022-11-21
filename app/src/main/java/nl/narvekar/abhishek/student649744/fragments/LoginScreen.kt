@@ -1,43 +1,29 @@
 package nl.narvekar.abhishek.student649744.fragments
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
-import nl.narvekar.abhishek.student649744.api.NewsApi
-import nl.narvekar.abhishek.student649744.api.RetrofitInstance
-import nl.narvekar.abhishek.student649744.data.LoginResponse
 import nl.narvekar.abhishek.student649744.data.User
-import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.navigation.Routes
-import nl.narvekar.abhishek.student649744.ui.theme.Purple700
 import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 //@Preview(showBackground = true)
 @Composable
