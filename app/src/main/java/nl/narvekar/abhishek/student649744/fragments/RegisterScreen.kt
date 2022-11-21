@@ -60,13 +60,13 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            label = { Text(text = "Username") },
+            label = { Text(text = "Username", color = MaterialTheme.colors.onSurface) },
             value = username.value,
             onValueChange = { username.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
-            label = { Text(text = "Password") },
+            label = { Text(text = "Password", color = MaterialTheme.colors.onSurface) },
             value = password.value,
             onValueChange = { password.value = it }
         )

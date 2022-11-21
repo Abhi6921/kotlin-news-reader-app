@@ -62,16 +62,17 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
-            label = { Text(text = "Username") },
+            label = { Text(text = "Username", color = MaterialTheme.colors.onSurface) },
             value = username.value,
             onValueChange = { username.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
-            label = { Text(text = "Password") },
+            label = { Text(text = "Password", color = MaterialTheme.colors.onSurface) },
             value = password.value,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
             onValueChange = { password.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -85,15 +86,15 @@ fun LoginScreen(
                     else {
                         loginViewModel.loginUser(context,
                             User(
-                                username.value.text.toString(),
-                                password.value.text.toString()
+                                username.value.text,
+                                password.value.text
                             ),
                             navController,
                             sharedPreferences
                         )
                     }
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 shape = RoundedCornerShape(50.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,7 +109,7 @@ fun LoginScreen(
                 onClick = {
                     navController.navigate(Routes.Register.route)
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 shape = RoundedCornerShape(50.dp),
                 modifier = Modifier
                     .fillMaxWidth()

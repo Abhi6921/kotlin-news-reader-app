@@ -69,7 +69,7 @@ fun ArticleDetailScreen(
                 title = {
                     Text(text = "News Detail Screen")
                 },
-                backgroundColor = MaterialTheme.colors.primarySurface,
+                backgroundColor = MaterialTheme.colors.primary,
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -85,7 +85,7 @@ fun ArticleDetailScreen(
                 contentDescription = "Article Image",
                 modifier = Modifier.size(500.dp),
                 contentScale = ContentScale.Crop,
-                error =  painterResource(R.drawable.placeholder)
+                placeholder =  painterResource(R.drawable.placeholder)
             )
             Text(
                 text = article.Title,
@@ -112,7 +112,7 @@ fun ArticleDetailScreen(
             ClickableText(
                 text = AnnotatedString(text),
                 style = TextStyle(
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colors.onSurface,
                     fontSize = 16.sp
                 ),
                 onClick = {

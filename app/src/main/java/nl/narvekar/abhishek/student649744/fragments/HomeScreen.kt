@@ -76,7 +76,7 @@ fun HomeScreen(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    CircularProgressIndicator()
+                                    CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
                                 }
                             }
                         }
@@ -89,7 +89,7 @@ fun HomeScreen(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    CircularProgressIndicator()
+                                    CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
                                 }
                             }
                         }
@@ -124,7 +124,7 @@ fun TopAppBarForArticles(
         title = {
             Text(text = title)
         },
-        backgroundColor = MaterialTheme.colors.primarySurface,
+        backgroundColor = MaterialTheme.colors.primary,
         navigationIcon = {
 
         }, actions = {
@@ -156,7 +156,7 @@ fun ArticleItem(
             //.wrapContentHeight(align = Alignment.Top)
             .clickable { onClickAction(article) },
         elevation = 8.dp,
-        backgroundColor = MaterialTheme.colors.primarySurface,
+        backgroundColor = MaterialTheme.colors.surface,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -167,7 +167,7 @@ fun ArticleItem(
             Text(
                 text = article.Title,
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onPrimary
+                color = MaterialTheme.colors.onSurface
             )
         }
         if (isLiked) {

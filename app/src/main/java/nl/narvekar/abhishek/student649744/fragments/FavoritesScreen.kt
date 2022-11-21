@@ -89,7 +89,7 @@ fun FavoritesArticleItem(
             .fillMaxWidth()
             .clickable { onClickAction(article) },
         elevation = 8.dp,
-        backgroundColor = MaterialTheme.colors.primarySurface
+        backgroundColor = MaterialTheme.colors.surface
     ) {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -99,7 +99,7 @@ fun FavoritesArticleItem(
             Text(
                 text = article.Title,
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onPrimary
+                color = MaterialTheme.colors.onSurface
             )
         }
         Row(

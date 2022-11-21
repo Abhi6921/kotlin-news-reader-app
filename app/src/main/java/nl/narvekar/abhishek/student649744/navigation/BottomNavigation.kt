@@ -1,9 +1,6 @@
 package nl.narvekar.abhishek.student649744.navigation
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -23,7 +20,7 @@ fun BottomBarNavigation(navController: NavController) {
         return
     }
 
-    BottomNavigation {
+    BottomNavigation(backgroundColor = MaterialTheme.colors.primary) {
 
         val homeSelected = currentRoute == Routes.Home.route
         BottomNavigationItem(
@@ -44,17 +41,17 @@ fun BottomBarNavigation(navController: NavController) {
             label = { Text(Routes.Home.route) }
         )
 
-        val searchSelected = currentRoute == Routes.Favorites.route
+        val favoriteSelected = currentRoute == Routes.Favorites.route
         BottomNavigationItem(
             icon = {
                 Icon(
-                    imageVector = if (searchSelected) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
+                    imageVector = if (favoriteSelected) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = Routes.Favorites.route
                 )
             },
-            selected = searchSelected,
+            selected = favoriteSelected,
             onClick = {
-                if (!searchSelected) {
+                if (!favoriteSelected) {
                     navController.navigate(Routes.Favorites.route)
                 }
             },
