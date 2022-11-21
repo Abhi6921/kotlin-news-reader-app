@@ -60,6 +60,7 @@ fun ArticleDetailScreen(
     val article: Article? = articleDetailViewModel.getArticleById(authToken, detailId).results.firstOrNull()
 
     val uriHandler = LocalUriHandler.current
+
     Column(
         modifier = Modifier
             .verticalScroll(state = scrollState)
