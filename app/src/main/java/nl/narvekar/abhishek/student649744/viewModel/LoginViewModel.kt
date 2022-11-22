@@ -31,12 +31,13 @@ class LoginViewModel : ViewModel() {
 
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
-                    val authToken = response.body()?.AuthToken
-                    //print(authToken)
-                    val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                    editor.putString(Constants.AUTH_TOKEN_KEY, authToken)
-                    editor.apply()
                     if (response.code() == 200) {
+                        val authToken = response.body()?.AuthToken
+                        //print(authToken)
+                        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                        editor.putString(Constants.AUTH_TOKEN_KEY, authToken)
+                        editor.apply()
+
                         Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
 
                         navController.navigate(Routes.Home.route) {

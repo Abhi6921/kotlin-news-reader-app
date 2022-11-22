@@ -62,8 +62,10 @@ fun HomeScreen(
                             ArticleItem(article = article, isLiked = article.IsLiked) {
                                 navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
                             }
+
                         }
                     }
+
                 }
                 
                 articles.apply {

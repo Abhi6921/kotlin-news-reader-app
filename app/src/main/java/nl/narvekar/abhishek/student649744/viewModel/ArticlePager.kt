@@ -31,13 +31,14 @@ class ArticlePager(var authToken: String): PagingSource<Int, Article>() {
             .getOrElse {
                 return LoadResult.Error(it)
             }
-        return LoadResult.Page(result.results, if (nextPage == 1) null else nextPage - 1, (params.key ?: 0) + 1)
+        //return LoadResult.Page(result.results, if (nextPage == 1) null else nextPage - 1, (params.key ?: 0) + 1)
+        return LoadResult.Page(result.results, null, (params.key ?: 0) + 1)
     }
 
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
 
-        val response = api.getAllArticles(authToken, startkey * loadSize)
-
+        //val response = api.getAllArticles(loadSize.coerceIn(startkey, startkey * loadSize), authToken)
+        val response = api.getAllArticles(authToken, loadSize)
         return when {
             response.isSuccessful -> {
                 val body = response.body()

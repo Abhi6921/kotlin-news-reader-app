@@ -91,7 +91,7 @@ fun RegisterScreen(
                           }
                 },
                 shape = RoundedCornerShape(50.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -110,7 +110,7 @@ fun RegisterScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant)
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {
                 Text(text = "Back to Login")
 

@@ -20,7 +20,7 @@ const val ARTICLE_ID_KEY = "Id"
 @Composable
 fun NavigationScreen(
     sharedPreferences: SharedPreferences,
-    viewModel: ArticleViewModel,
+    articleViewModel: ArticleViewModel,
     favoritesViewModel: FavoritesViewModel,
     authToken: String,
     articleDetailViewModel: ArticleDetailViewModel,
@@ -49,7 +49,7 @@ fun NavigationScreen(
             HomeScreen(
                 navController,
                 sharedPreferences,
-                viewModel,
+                articleViewModel,
                 loginViewModel
             )
         }
@@ -73,7 +73,7 @@ fun NavigationScreen(
                 navController,
                 sharedPreferences,
                 favoritesViewModel.favoritesListResponse.results,
-                viewModel,
+                articleViewModel,
                 favoritesViewModel,
                 loginViewModel
             )

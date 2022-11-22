@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
     val loginViewModel by viewModels<LoginViewModel>()
     val registerViewModel by viewModels<RegisterViewModel>()
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
