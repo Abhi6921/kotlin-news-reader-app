@@ -13,7 +13,7 @@ interface NewsApi {
 
     @Headers("Content-Type:application/json")
     @POST("api/Users/login")
-     fun loginUser(@Body user: User) : Call<LoginResponse>
+    fun loginUser(@Body user: User) : Call<LoginResponse>
 
     @Headers("Content-Type:application/json")
     @POST("api/Users/register")
@@ -22,11 +22,10 @@ interface NewsApi {
     @GET("api/Articles/{id}")
     suspend fun getArticleById(@Header("x-authtoken") authToken: String, @Path("id") Id: Int) : ArticleList
 
+    @Headers("Content-Type:application/json")
     @GET("api/Articles")
-    suspend fun getAllArticles(@Query("count") count: Int) : ArticleList
+    suspend fun getAllArticles(@Header("x-authtoken") authToken: String, @Query("count") count: Int) : Response<ArticleList>
 
-    @GET("api/Articles")
-    suspend fun getAllArticlesPaging(@Header("x-authtoken") authToken: String, @Query("count") count: Int) : Response<ArticleList>
 
     @GET("api/Articles/liked")
     suspend fun getAllLikedArticles(@Header("x-authtoken") authToken: String) : ArticleList

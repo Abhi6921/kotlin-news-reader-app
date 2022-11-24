@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
+import kotlinx.coroutines.delay
 import nl.narvekar.abhishek.student649744.Constants
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
@@ -31,22 +33,30 @@ import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
+import nl.narvekar.abhishek.student649744.viewModel.ArticlePager
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
+import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     sharedPreferences: SharedPreferences,
-    viewModel: ArticleViewModel
+    articleViewModel: ArticleViewModel,
+    loginViewModel: LoginViewModel
 ) {
     Student649744Theme {
-        val articles = viewModel.articles.collectAsLazyPagingItems()
+        LaunchedEffect(key1 = Unit) {
+            delay(6000)
+        }
+
+        val articles = articleViewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
                 sharedPreferences = sharedPreferences,
                 title = "News Articles",
-                viewModel
+                articleViewModel,
+                loginViewModel
             )
         },
             bottomBar = {
@@ -62,24 +72,43 @@ fun HomeScreen(
 
                         }
                     }
+
                 }
+                
                 articles.apply {
                     when {
                         loadState.refresh is LoadState.Loading -> {
                             Row(Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Spacer(modifier = Modifier.height(20.dp))
-                                CircularProgressIndicator()
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
+                                }
                             }
                         }
                         loadState.append is LoadState.Loading -> {
                             Row(
                                 Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.Bottom
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                CircularProgressIndicator()
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
+                                }
+                            }
+                        }
+                        loadState.append is LoadState.Error -> {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(text = "error loading from api")
                             }
                         }
                     }
@@ -95,15 +124,16 @@ fun TopAppBarForArticles(
     navController: NavController,
     sharedPreferences: SharedPreferences,
     title: String,
-    viewModel: ArticleViewModel
+    articleViewModel: ArticleViewModel,
+    loginViewModel: LoginViewModel
 ) {
-    val articles = viewModel.articles.collectAsLazyPagingItems()
+    val articles = articleViewModel.articles.collectAsLazyPagingItems()
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
         title = {
             Text(text = title)
         },
-        backgroundColor = MaterialTheme.colors.primarySurface,
+        backgroundColor = MaterialTheme.colors.primary,
         navigationIcon = {
 
         }, actions = {
@@ -114,10 +144,7 @@ fun TopAppBarForArticles(
                 Icon(Icons.Filled.Refresh, null)
             }
             IconButton(onClick = {
-                logout(
-                    sharedPreferences = sharedPreferences,
-                    navController = navController
-                )
+                loginViewModel.logout(sharedPreferences, navController)
             }) {
                 Icon(Icons.Filled.ExitToApp, contentDescription = null)
             }
@@ -138,7 +165,7 @@ fun ArticleItem(
             //.wrapContentHeight(align = Alignment.Top)
             .clickable { onClickAction(article) },
         elevation = 8.dp,
-        backgroundColor = MaterialTheme.colors.primarySurface,
+        backgroundColor = MaterialTheme.colors.surface,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -149,7 +176,7 @@ fun ArticleItem(
             Text(
                 text = article.Title,
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onPrimary
+                color = MaterialTheme.colors.onSurface
             )
         }
         if (isLiked) {
@@ -187,19 +214,19 @@ fun ProfilePictureArticle(article: Article, profilePicSize: Dp) {
 }
 
 
-fun logout(
-    sharedPreferences: SharedPreferences,
-    navController: NavController
-) {
-    // clear authToken
-    val editor = sharedPreferences.edit()
-    editor.putString(AUTH_TOKEN_KEY, "")
-    editor.clear()
-    editor.apply()
-
-    navController.navigate(Routes.Login.route) {
-        popUpTo(Routes.Home.route) {
-            inclusive = true
-        }
-    }
-}
+//fun logout(
+//    sharedPreferences: SharedPreferences,
+//    navController: NavController
+//) {
+//    // clear authToken
+//    val editor = sharedPreferences.edit()
+//    editor.putString(AUTH_TOKEN_KEY, "")
+//    editor.clear()
+//    editor.apply()
+//
+//    navController.navigate(Routes.Login.route) {
+//        popUpTo(Routes.Home.route) {
+//            inclusive = true
+//        }
+//    }
+//}

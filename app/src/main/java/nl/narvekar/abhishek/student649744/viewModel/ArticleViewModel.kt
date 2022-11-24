@@ -12,8 +12,6 @@ import androidx.paging.cachedIn
 
 class ArticleViewModel(authToken: String) : ViewModel() {
 
-    //var authToken: String by  mutableStateOf("")
-
     val articles = Pager(PagingConfig(pageSize = 20)) {
         ArticlePager(authToken)
     }.flow.cachedIn(viewModelScope)

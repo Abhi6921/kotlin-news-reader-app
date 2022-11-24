@@ -4,10 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +26,7 @@ import nl.narvekar.abhishek.student649744.data.RegisterUserResponse
 import nl.narvekar.abhishek.student649744.data.User
 import nl.narvekar.abhishek.student649744.fragments.components.SuccessDialog
 import nl.narvekar.abhishek.student649744.navigation.Routes
+import nl.narvekar.abhishek.student649744.viewModel.RegisterViewModel
 import okhttp3.Route
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,7 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    registerViewModel: RegisterViewModel
 ) {
     val showDialog = remember { mutableStateOf(false) }
 
@@ -61,13 +60,13 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            label = { Text(text = "Username") },
+            label = { Text(text = "Username", color = MaterialTheme.colors.onSurface) },
             value = username.value,
             onValueChange = { username.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
-            label = { Text(text = "Password") },
+            label = { Text(text = "Password", color = MaterialTheme.colors.onSurface) },
             value = password.value,
             onValueChange = { password.value = it }
         )
@@ -77,11 +76,11 @@ fun RegisterScreen(
             Button(
                 onClick = {
                           if (username.value.text.isEmpty() || password.value.text.isEmpty()) {
-                              Toast.makeText(context, "Please enter all credentials!", Toast.LENGTH_SHORT)
+                              Toast.makeText(context, "Please enter all credentials!", Toast.LENGTH_LONG)
                                   .show()
                           }
                           else {
-                              signup(
+                              registerViewModel.signup(
                                   context,
                                   User(
                                       username.value.text.toString(),
@@ -89,10 +88,10 @@ fun RegisterScreen(
                                   ),
                                   navController
                               )
-                              showDialog.value = true
                           }
                 },
                 shape = RoundedCornerShape(50.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -110,7 +109,8 @@ fun RegisterScreen(
                 shape = RoundedCornerShape(50.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {
                 Text(text = "Back to Login")
 
@@ -120,37 +120,37 @@ fun RegisterScreen(
 }
 // https://medium.com/@yilmazvolkan/kotlin-sign-up-and-sign-in-with-retrofit-tutorial-c96ca14f06c4
 
-private fun signup(
-    context: Context,
-    user: User,
-    navController: NavController
-) {
-    //val retrofitInstance = RetrofitInstance.getRetrofitInstance().create(NewsApi::class.java)
-    val retrofitInstance = NewsApi.getInstance()
-
-    retrofitInstance.postANewUser(user).enqueue(object :
-        Callback<RegisterUserResponse> {
-            override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResponse(
-                call: Call<RegisterUserResponse>,
-                response: Response<RegisterUserResponse>
-            ) {
-                if (response.code() == 201) {
-                    Toast.makeText(context, "Registeration Successful!", Toast.LENGTH_SHORT).show()
-
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Register.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-                else {
-                    Toast.makeText(context, "Registration failure", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    )
-}
+//private fun signup(
+//    context: Context,
+//    user: User,
+//    navController: NavController
+//) {
+//    //val retrofitInstance = RetrofitInstance.getRetrofitInstance().create(NewsApi::class.java)
+//    val retrofitInstance = NewsApi.getInstance()
+//
+//    retrofitInstance.postANewUser(user).enqueue(object :
+//        Callback<RegisterUserResponse> {
+//            override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
+//                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onResponse(
+//                call: Call<RegisterUserResponse>,
+//                response: Response<RegisterUserResponse>
+//            ) {
+//                if (response.code() == 201) {
+//                    Toast.makeText(context, "Registeration Successful!", Toast.LENGTH_SHORT).show()
+//
+//                    navController.navigate(Routes.Login.route) {
+//                        popUpTo(Routes.Register.route) {
+//                            inclusive = true
+//                        }
+//                    }
+//                }
+//                else {
+//                    Toast.makeText(context, "Registration failure", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    )
+//}

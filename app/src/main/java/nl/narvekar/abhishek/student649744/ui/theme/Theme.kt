@@ -7,31 +7,42 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-        primary = WhiteColor,
+        primary = purple,
+        primaryVariant = tealDark,
+        secondary = redDark,
+        background = Color.Black,
+        surface = Color.DarkGray,
         onPrimary = Color.White,
-        primaryVariant = Purple700,
-        secondary = Teal200,
 
 
 )
 
 private val LightColorPalette = lightColors(
-        primary = Purple500,
+        primary = teal700,
+        primaryVariant = tealDark,
+        secondary = red100,
+        background = Color.White,
+        surface = Color.White,
         onPrimary = Color.White,
-        primaryVariant = Purple700,
-        secondary = Teal200
 )
 
 
 
 @Composable
 fun Student649744Theme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+    val systemUiController = rememberSystemUiController()
+
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
         LightColorPalette
+    }
+
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(color = MaterialTheme.colors.primary)
     }
 
     MaterialTheme(
