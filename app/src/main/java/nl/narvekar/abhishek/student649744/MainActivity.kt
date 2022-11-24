@@ -28,7 +28,7 @@ import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
 import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
-
+    // this commit is from the security branch
     lateinit var sharedPreferences: SharedPreferences
     val favoritesViewModel by viewModels<FavoritesViewModel>()
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
