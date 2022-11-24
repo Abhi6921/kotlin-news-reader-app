@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
+import kotlinx.coroutines.delay
 import nl.narvekar.abhishek.student649744.Constants
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
@@ -31,6 +33,7 @@ import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
+import nl.narvekar.abhishek.student649744.viewModel.ArticlePager
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
 import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 
@@ -42,6 +45,10 @@ fun HomeScreen(
     loginViewModel: LoginViewModel
 ) {
     Student649744Theme {
+        LaunchedEffect(key1 = Unit) {
+            delay(6000)
+        }
+
         val articles = articleViewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(

@@ -1,9 +1,11 @@
 package nl.narvekar.abhishek.student649744
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.Constants.PREF_KEY
 import nl.narvekar.abhishek.student649744.navigation.NavigationScreen
@@ -31,19 +34,19 @@ class MainActivity : ComponentActivity() {
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
     val loginViewModel by viewModels<LoginViewModel>()
     val registerViewModel by viewModels<RegisterViewModel>()
+    //val articleViewModel by viewModels<ArticleViewModel>()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            sharedPreferences = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE)
-            val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
             Student649744Theme {
+                sharedPreferences = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE)
+                val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
+
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-
                     val articleViewModel = ArticleViewModel(authToken)
-
                     NavigationScreen(
                         sharedPreferences,
                         articleViewModel,
@@ -51,7 +54,8 @@ class MainActivity : ComponentActivity() {
                         authToken,
                         articleDetailViewModel,
                         loginViewModel,
-                        registerViewModel)
+                        registerViewModel
+                    )
                 }
             }
         }

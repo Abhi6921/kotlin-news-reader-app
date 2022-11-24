@@ -1,6 +1,8 @@
 package nl.narvekar.abhishek.student649744.viewModel
 
+import android.content.ContentValues.TAG
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -12,7 +14,7 @@ import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 import nl.narvekar.abhishek.student649744.data.ArticleMapper
 
-class ArticlePager(var authToken: String): PagingSource<Int, Article>() {
+class ArticlePager(val authToken: String): PagingSource<Int, Article>() {
 
     private val articleMapper = ArticleMapper()
 
@@ -36,9 +38,10 @@ class ArticlePager(var authToken: String): PagingSource<Int, Article>() {
     }
 
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
-
+        Log.d(TAG, "fetch authToken at pager: $authToken")
         //val response = api.getAllArticles(loadSize.coerceIn(startkey, startkey * loadSize), authToken)
         val response = api.getAllArticles(authToken, loadSize)
+        Log.d(TAG, "fetch token after getAllArticlesMethod: $authToken")
         return when {
             response.isSuccessful -> {
                 val body = response.body()
