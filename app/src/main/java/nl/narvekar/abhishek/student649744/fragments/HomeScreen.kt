@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +26,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.Constants
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
@@ -45,10 +48,6 @@ fun HomeScreen(
     loginViewModel: LoginViewModel
 ) {
     Student649744Theme {
-        LaunchedEffect(key1 = Unit) {
-            delay(6000)
-        }
-
         val articles = articleViewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(
@@ -128,6 +127,7 @@ fun TopAppBarForArticles(
     loginViewModel: LoginViewModel
 ) {
     val articles = articleViewModel.articles.collectAsLazyPagingItems()
+    val coroutineScope = rememberCoroutineScope()
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
         title = {
@@ -144,7 +144,10 @@ fun TopAppBarForArticles(
                 Icon(Icons.Filled.Refresh, null)
             }
             IconButton(onClick = {
-                loginViewModel.logout(sharedPreferences, navController)
+                coroutineScope.launch {
+                    loginViewModel.signOut(sharedPreferences, navController)
+                }
+                //loginViewModel.logout(sharedPreferences, navController)
             }) {
                 Icon(Icons.Filled.ExitToApp, contentDescription = null)
             }

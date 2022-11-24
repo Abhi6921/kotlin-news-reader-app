@@ -1,8 +1,10 @@
 package nl.narvekar.abhishek.student649744.viewModel
 
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -18,9 +20,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class LoginViewModel : ViewModel() {
 
-    fun loginUser(context: Context,
+    suspend fun loginUser(context: Context,
               user: User,
               navController: NavController,
               sharedPreferences: SharedPreferences
@@ -34,15 +37,15 @@ class LoginViewModel : ViewModel() {
                     }
                     override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
-                        val authToken = response.body()?.AuthToken
-
                         if (response.code() == 200 && response.isSuccessful) {
-                            //print(authToken)
+
+                            val authToken = response.body()?.AuthToken
                             val editor: SharedPreferences.Editor = sharedPreferences.edit()
                             editor.putString(AUTH_TOKEN_KEY, authToken).toString()
                             editor.apply()
 
                             Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+
                             navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Login.route) {
                                     inclusive = true
@@ -60,7 +63,14 @@ class LoginViewModel : ViewModel() {
 
     }
 
-    fun logout(
+    suspend fun signIn(context: Context,
+                       user: User,
+                       navController: NavController,
+                       sharedPreferences: SharedPreferences) {
+        loginUser(context, user, navController, sharedPreferences)
+    }
+
+    suspend fun logout(
         sharedPreferences: SharedPreferences,
         navController: NavController
     ) {
@@ -76,4 +86,9 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun signOut(sharedPreferences: SharedPreferences, navController: NavController) {
+        logout(sharedPreferences, navController)
+    }
 }
+
