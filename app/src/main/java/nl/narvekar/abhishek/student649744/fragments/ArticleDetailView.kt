@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
@@ -53,12 +54,10 @@ fun ArticleDetailScreen(
     favoritesViewModel: FavoritesViewModel,
    articleDetailViewModel: ArticleDetailViewModel
 ) {
-
     val scrollState = rememberScrollState()
 
-    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-
-    val article: Article? = articleDetailViewModel.getArticleById(authToken, detailId).results.firstOrNull()
+    val AuthToken = Session.getAuthToken()
+    val article: Article? = articleDetailViewModel.getArticleById(AuthToken, detailId).results.firstOrNull()
 
     val uriHandler = LocalUriHandler.current
 
@@ -108,7 +107,6 @@ fun ArticleDetailScreen(
                     )
 
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    //Text(text = "Full article at nos.nl")
                     val text = "open in browser"
                     ClickableText(
                         text = AnnotatedString(text),
@@ -161,19 +159,17 @@ fun FavoriteButton(
 ) {
     var isFavorite by remember { mutableStateOf(article.IsLiked) }
 
-    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-    Log.d("Token articleDetail", "authToken: $authToken")
-
+    val AuthToken = Session.getAuthToken()
     val context = LocalContext.current
 
     IconButton(
         onClick = {
             isFavorite = !isFavorite
             if (isFavorite) {
-                favoritesViewModel.likeArticle(authToken, article.Id)
+                favoritesViewModel.likeArticle(AuthToken, article.Id)
                 Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
             } else {
-                favoritesViewModel.removeArticle(authToken, article.Id)
+                favoritesViewModel.removeArticle(AuthToken, article.Id)
                 Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
             }
         }

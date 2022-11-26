@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
@@ -38,9 +39,8 @@ fun FavoritesScreen(
     favoritesViewModel: FavoritesViewModel,
     loginViewModel: LoginViewModel
 ) {
-    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-    favoritesViewModel.getFavoriteArticles(authToken)
-
+    val sessionToken = Session.getAuthToken()
+    favoritesViewModel.getFavoriteArticles(authToken = sessionToken)
     Scaffold(topBar = {
         TopAppBarForArticles(
             navController = navController,

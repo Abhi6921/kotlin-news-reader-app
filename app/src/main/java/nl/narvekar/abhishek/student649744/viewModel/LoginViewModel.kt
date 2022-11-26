@@ -12,6 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
+import nl.narvekar.abhishek.student649744.Constants.PASSWORD
+import nl.narvekar.abhishek.student649744.Constants.USERNAME
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.LoginResponse
 import nl.narvekar.abhishek.student649744.data.User
@@ -39,13 +42,16 @@ class LoginViewModel : ViewModel() {
 
                         if (response.code() == 200 && response.isSuccessful) {
 
-                            val authToken = response.body()?.AuthToken
-                            val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                            editor.putString(AUTH_TOKEN_KEY, authToken).toString()
-                            editor.apply()
+                              val authToken = response.body()?.AuthToken
+//                            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+//                            editor.putString(AUTH_TOKEN_KEY, authToken).toString()
+//                            editor.apply()
+                            if (authToken != null) {
+                                saveData(user.UserName, user.Password, authToken)
+                            }
 
                             Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-
+                            //https://github.com/guidovdijk/kotlin-newsapp/blob/main/app/src/main/java/nl/vandijk/guido/util/SessionManager.kt
                             navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Login.route) {
                                     inclusive = true
@@ -60,7 +66,6 @@ class LoginViewModel : ViewModel() {
                 })
             delay(6000)
         }
-
     }
 
     suspend fun signIn(context: Context,
@@ -75,10 +80,11 @@ class LoginViewModel : ViewModel() {
         navController: NavController
     ) {
         // clear authToken
-        val editor = sharedPreferences.edit()
-        editor.putString(AUTH_TOKEN_KEY, "")
-        editor.clear()
-        editor.apply()
+//        val editor = sharedPreferences.edit()
+//        editor.putString(AUTH_TOKEN_KEY, "")
+//        editor.clear()
+//        editor.apply()
+        Session.removeData()
 
         navController.navigate(Routes.Login.route) {
             popUpTo(Routes.Home.route) {
@@ -89,6 +95,10 @@ class LoginViewModel : ViewModel() {
 
     suspend fun signOut(sharedPreferences: SharedPreferences, navController: NavController) {
         logout(sharedPreferences, navController)
+    }
+
+    private fun saveData(username: String, password: String, authToken: String) {
+        Session.saveData(username, password, authToken)
     }
 }
 

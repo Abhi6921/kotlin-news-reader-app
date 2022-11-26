@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.fragments.*
 import nl.narvekar.abhishek.student649744.viewModel.*
@@ -28,9 +29,10 @@ fun NavigationScreen(
     registerViewModel: RegisterViewModel
 ) {
     val navController = rememberNavController()
+    val AuthToken = Session.getAuthToken()
     NavHost(
         navController = navController,
-        startDestination =   if (authToken.isEmpty())  { Routes.getDestination() } else { Routes.Home.route }
+        startDestination =   if (AuthToken.isEmpty())  { Routes.getDestination() } else { Routes.Home.route }
     ) {
         composable(route = Routes.Login.route) {
             LoginScreen(

@@ -8,6 +8,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import nl.narvekar.abhishek.student649744.Constants
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.Article
@@ -20,6 +21,8 @@ class ArticlePager(val authToken: String): PagingSource<Int, Article>() {
 
     private val api = NewsApi.getInstance()
 
+    override val keyReuseSupported: Boolean
+        get() = super.keyReuseSupported
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPageIndex = state.pages.indexOf(state.closestPageToPosition(anchorPosition))
@@ -38,8 +41,10 @@ class ArticlePager(val authToken: String): PagingSource<Int, Article>() {
     }
 
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
-        Log.d(TAG, "fetch authToken at pager: $authToken")
+
+        //Log.d(TAG, "fetch authToken at pager: $authToken")
         //val response = api.getAllArticles(loadSize.coerceIn(startkey, startkey * loadSize), authToken)
+        val authToken = Session.getAuthToken()
         val response = api.getAllArticles(authToken, loadSize)
         Log.d(TAG, "fetch token after getAllArticlesMethod: $authToken")
         return when {
