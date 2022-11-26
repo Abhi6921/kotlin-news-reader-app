@@ -212,21 +212,3 @@ fun ProfilePictureArticle(article: Article, profilePicSize: Dp) {
         )
     }
 }
-
-
-//fun logout(
-//    sharedPreferences: SharedPreferences,
-//    navController: NavController
-//) {
-//    // clear authToken
-//    val editor = sharedPreferences.edit()
-//    editor.putString(AUTH_TOKEN_KEY, "")
-//    editor.clear()
-//    editor.apply()
-//
-//    navController.navigate(Routes.Login.route) {
-//        popUpTo(Routes.Home.route) {
-//            inclusive = true
-//        }
-//    }
-//}

@@ -42,15 +42,12 @@ class LoginViewModel : ViewModel() {
                         if (response.code() == 200 && response.isSuccessful) {
 
                               val authToken = response.body()?.AuthToken
-//                            val editor: SharedPreferences.Editor = sharedPreferences.edit()
-//                            editor.putString(AUTH_TOKEN_KEY, authToken).toString()
-//                            editor.apply()
+
                             if (authToken != null) {
                                 saveData(user.UserName, user.Password, authToken)
                             }
 
                             Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-                            //https://github.com/guidovdijk/kotlin-newsapp/blob/main/app/src/main/java/nl/vandijk/guido/util/SessionManager.kt
                             navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Login.route) {
                                     inclusive = true
@@ -74,11 +71,6 @@ class LoginViewModel : ViewModel() {
     suspend fun logout(
         navController: NavController
     ) {
-        // clear authToken
-//        val editor = sharedPreferences.edit()
-//        editor.putString(AUTH_TOKEN_KEY, "")
-//        editor.clear()
-//        editor.apply()
         Session.removeData()
 
         navController.navigate(Routes.Login.route) {

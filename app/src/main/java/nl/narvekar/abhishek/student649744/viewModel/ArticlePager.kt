@@ -21,8 +21,7 @@ class ArticlePager: PagingSource<Int, Article>() {
 
     private val api = NewsApi.getInstance()
 
-    override val keyReuseSupported: Boolean
-        get() = super.keyReuseSupported
+    override val keyReuseSupported: Boolean = true
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPageIndex = state.pages.indexOf(state.closestPageToPosition(anchorPosition))
@@ -36,16 +35,13 @@ class ArticlePager: PagingSource<Int, Article>() {
             .getOrElse {
                 return LoadResult.Error(it)
             }
-        //return LoadResult.Page(result.results, if (nextPage == 1) null else nextPage - 1, (params.key ?: 0) + 1)
         return LoadResult.Page(result.results, null, (params.key ?: 0) + 1)
     }
 
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
 
-        //Log.d(TAG, "fetch authToken at pager: $authToken")
-        //val response = api.getAllArticles(loadSize.coerceIn(startkey, startkey * loadSize), authToken)
         val authToken = Session.getAuthToken()
-        val response = api.getAllArticles(authToken, loadSize)
+        val response = api.getAllArticles(authToken, startkey * loadSize)
         Log.d(TAG, "fetch token after getAllArticlesMethod: $authToken")
         return when {
             response.isSuccessful -> {

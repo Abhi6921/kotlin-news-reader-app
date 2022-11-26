@@ -10,8 +10,7 @@ import retrofit2.http.*
 
 
 interface NewsApi {
-
-
+    
     @Headers("Content-Type:application/json")
     @POST("api/Users/login")
     fun loginUser(@Body user: User) : Call<LoginResponse>

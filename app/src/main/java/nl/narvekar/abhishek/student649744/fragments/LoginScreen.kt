@@ -34,6 +34,9 @@ fun LoginScreen(
     navController: NavController,
     loginViewModel: LoginViewModel
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.Center,
@@ -41,9 +44,6 @@ fun LoginScreen(
     ) {
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
-
-        val context = LocalContext.current
-        val coroutineScope = rememberCoroutineScope()
 
             Text(
                 text = "Login",
@@ -74,14 +74,6 @@ fun LoginScreen(
                             Toast.makeText(context, "please fill credentials!", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
-    //                        loginViewModel.loginUser(context,
-    //                            User(
-    //                                username.value.text,
-    //                                password.value.text
-    //                            ),
-    //                            navController,
-    //                            sharedPreferences
-    //                        )
                             coroutineScope.launch {
                                 loginViewModel.signIn(
                                     context, User(
@@ -119,40 +111,3 @@ fun LoginScreen(
             }
     }
 }
-
-//private fun loginUser(
-//    context: Context,
-//    user: User,
-//    navController: NavController,
-//    sharedPreferences: SharedPreferences
-//) {
-//    val retrofitInstance = NewsApi.getInstance()
-//
-//    retrofitInstance.loginUser(user).enqueue(
-//        object : Callback<LoginResponse> {
-//            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-//                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-//
-//                val authToken = response.body()?.AuthToken
-//                //print(authToken)
-//                val editor: SharedPreferences.Editor = sharedPreferences.edit()
-//                editor.putString(AUTH_TOKEN_KEY, authToken)
-//                editor.apply()
-//                if (response.code() == 200) {
-//                    Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-//
-//                    navController.navigate(Routes.Home.route) {
-//                        popUpTo(Routes.Login.route) {
-//                            inclusive = true
-//                        }
-//                    }
-//                }
-//                else {
-//                    Toast.makeText(context, "Login failure!", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
-//}
