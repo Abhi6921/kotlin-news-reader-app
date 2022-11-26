@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">student649744</string>
+
+    <!--Login Strings-->
+    <string name="ui_text_login_title">Login here</string>
+    <string name="ui_text_login_button">Login</string>
+    <string name="ui_register_here_button_text">Register</string>
+    <string name="ui_login_successful_message">Login Successful!</string>
+    <string name="ui_login_failure_message">Login Failure! Incorrect Username or Password!</string>
+
+    <!--Register Strings -->
+    <string name="ui_register_title">Register Here</string>
+    <string name="ui_username_label">Enter Username</string>
+    <string name="ui_password_label">Enter Password</string>
+    <string name="ui_empty_fields_error">Please fill all credentials!</string>
+    <string name="ui_register_button_text">Register</string>
+    <string name="ui_back_to_login_text">Back to login</string>
+    <string name="ui_register_successful_message">Registration Successful!</string>
+    <string name="ui_register_failure_message">Registeration Failure!:</string>
+
+    <!--HomeScreen Strings-->
+    <string name="ui_home_screen_title">News Articles</string>
+    <string name="ui_cannot_load_articles_from_api">Error loading articles from database</string>
+
+    <!--Favorite Strings-->
+    <string name="ui_no_favorite_articles">You have no favorite articles</string>
+    <string name="ui_topbar_favorites_title">Favorites</string>
+
+    <!--Article Detail Strings-->
+    <string name="ui_topbar_newsdetail_title">News Detail Screen</string>
+    <string name="ui_article_image">Article Image</string>
+    <string name="ui_open_in_borwser_text">Open in Browser</string>
+    <string name="ui_date_time_format">dd-MM-yyyy HH:mm a</string>
+    <string name="ui_no_article_description">This article has no description</string>
+    <string name="saved_to_favorites_message">saved to favorites!</string>
+    <string name="removed_from_favorites">Article Removed from favorites</string>
+
+
 </resources>

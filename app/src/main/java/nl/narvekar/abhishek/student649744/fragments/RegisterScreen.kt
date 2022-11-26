@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nl.narvekar.abhishek.student649744.Constants.BASE_URL
+import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.RegisterUserResponse
@@ -56,17 +58,17 @@ fun RegisterScreen(
 
        // val context = LocalContext.current
 
-        Text(text = "Register here", style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Monospace))
+        Text(text = stringResource(R.string.ui_register_title), style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Monospace))
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            label = { Text(text = "Username", color = MaterialTheme.colors.onSurface) },
+            label = { Text(text = stringResource(R.string.ui_username_label), color = MaterialTheme.colors.onSurface) },
             value = username.value,
             onValueChange = { username.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
-            label = { Text(text = "Password", color = MaterialTheme.colors.onSurface) },
+            label = { Text(text = stringResource(R.string.ui_password_label), color = MaterialTheme.colors.onSurface) },
             value = password.value,
             onValueChange = { password.value = it }
         )
@@ -76,7 +78,7 @@ fun RegisterScreen(
             Button(
                 onClick = {
                           if (username.value.text.isEmpty() || password.value.text.isEmpty()) {
-                              Toast.makeText(context, "Please enter all credentials!", Toast.LENGTH_LONG)
+                              Toast.makeText(context, context.getString(R.string.ui_empty_fields_error), Toast.LENGTH_LONG)
                                   .show()
                           }
                           else {
@@ -96,7 +98,7 @@ fun RegisterScreen(
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text(text = "Register")
+                Text(text = stringResource(R.string.ui_register_button_text))
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -112,7 +114,7 @@ fun RegisterScreen(
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {
-                Text(text = "Back to Login")
+                Text(text = stringResource(R.string.ui_back_to_login_text))
 
             }
         }

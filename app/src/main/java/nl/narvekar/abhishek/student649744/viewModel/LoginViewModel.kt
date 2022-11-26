@@ -11,9 +11,6 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
-import nl.narvekar.abhishek.student649744.Constants.PASSWORD
-import nl.narvekar.abhishek.student649744.Constants.USERNAME
 import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.LoginResponse
@@ -47,7 +44,7 @@ class LoginViewModel : ViewModel() {
                                 saveData(user.UserName, user.Password, authToken)
                             }
 
-                            Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_successful_message), Toast.LENGTH_SHORT).show()
                             navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Login.route) {
                                     inclusive = true
@@ -55,7 +52,7 @@ class LoginViewModel : ViewModel() {
                             }
                         }
                         else {
-                            Toast.makeText(context, "Login failure!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_failure_message), Toast.LENGTH_SHORT).show()
                         }
                     }
 

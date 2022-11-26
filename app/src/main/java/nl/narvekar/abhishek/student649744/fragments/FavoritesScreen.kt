@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,7 +44,7 @@ fun FavoritesScreen(
     Scaffold(topBar = {
         TopAppBarForArticles(
             navController = navController,
-            title = "Favorites",
+            title = stringResource(R.string.ui_topbar_favorites_title),
             articleViewModel,
             loginViewModel
         )
@@ -58,7 +59,7 @@ fun FavoritesScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "You have no favorite articles")
+                    Text(text = stringResource(R.string.ui_no_favorite_articles))
                 }
             }
             else {
@@ -110,10 +111,9 @@ fun FavoritesArticleItem(
                 //Spacer(modifier = Modifier.height(25.dp))
                 Icon(
                     imageVector = Icons.Filled.Favorite,
-                    contentDescription = "favorite icon"
+                    contentDescription = null
                 )
             }
-
         }
 
     }

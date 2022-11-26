@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -65,7 +66,7 @@ fun ArticleDetailScreen(
             TopAppBar(
                 elevation = 4.dp,
                 title = {
-                    Text(text = "News Detail Screen")
+                    Text(text = stringResource(R.string.ui_topbar_newsdetail_title))
                 },
                 backgroundColor = MaterialTheme.colors.primary,
                 navigationIcon = {
@@ -81,7 +82,7 @@ fun ArticleDetailScreen(
                 if (article != null) {
                     AsyncImage(
                         model = article.Image,
-                        contentDescription = "Article Image",
+                        contentDescription = stringResource(R.string.ui_article_image),
                         modifier = Modifier.size(500.dp),
                         contentScale = ContentScale.Crop,
                         placeholder =  painterResource(R.drawable.placeholder)
@@ -106,9 +107,9 @@ fun ArticleDetailScreen(
                     )
 
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    val text = "open in browser"
+                    //val text = "open in browser"
                     ClickableText(
-                        text = AnnotatedString(text),
+                        text = AnnotatedString(stringResource(R.string.ui_open_in_borwser_text)),
                         style = TextStyle(
                             color = MaterialTheme.colors.onSurface,
                             fontSize = 16.sp
@@ -120,7 +121,8 @@ fun ArticleDetailScreen(
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
 
                     var articleDate = LocalDateTime.parse(article.PublishDate)
-                    var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
+                    //var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
+                    var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.ui_date_time_format), Locale.GERMANY)
                     var formattedArticleDate = articleDate.format(formatter)
 
                     Text(
@@ -138,7 +140,7 @@ fun ArticleDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "This article has no description",
+                            text = stringResource(R.string.ui_no_article_description),
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold
                         )
@@ -165,10 +167,10 @@ fun FavoriteButton(
             isFavorite = !isFavorite
             if (isFavorite) {
                 favoritesViewModel.likeArticle(AuthToken, article.Id)
-                Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.saved_to_favorites_message), Toast.LENGTH_SHORT).show()
             } else {
                 favoritesViewModel.removeArticle(AuthToken, article.Id)
-                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT).show()
             }
         }
     ) {

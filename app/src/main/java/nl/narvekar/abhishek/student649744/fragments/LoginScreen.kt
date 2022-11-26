@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.User
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
@@ -46,19 +48,19 @@ fun LoginScreen(
         val password = remember { mutableStateOf(TextFieldValue()) }
 
             Text(
-                text = "Login",
+                text = stringResource(R.string.ui_text_login_title),
                 style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Monospace)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
             OutlinedTextField(
-                label = { Text(text = "Username", color = MaterialTheme.colors.onSurface) },
+                label = { Text(text = stringResource(R.string.ui_username_label), color = MaterialTheme.colors.onSurface) },
                 value = username.value,
                 onValueChange = { username.value = it })
 
             Spacer(modifier = Modifier.height(20.dp))
             OutlinedTextField(
-                label = { Text(text = "Password", color = MaterialTheme.colors.onSurface) },
+                label = { Text(text = stringResource(R.string.ui_password_label), color = MaterialTheme.colors.onSurface) },
                 value = password.value,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -71,7 +73,7 @@ fun LoginScreen(
                     onClick = {
                         //onClickLogin(username.value.toString(), password.value.toString())
                         if (username.value.text.isEmpty() || password.value.text.isEmpty()) {
-                            Toast.makeText(context, "please fill credentials!", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, context.getString(R.string.ui_empty_fields_error), Toast.LENGTH_SHORT)
                                 .show()
                         } else {
                             coroutineScope.launch {
@@ -91,7 +93,7 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Login", color = Color.White)
+                    Text(text = stringResource(R.string.ui_text_login_button), color = Color.White)
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -106,7 +108,7 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Register here", color = Color.White)
+                    Text(text = stringResource(R.string.ui_register_here_button_text), color = Color.White)
                 }
             }
     }

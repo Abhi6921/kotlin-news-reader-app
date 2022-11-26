@@ -42,7 +42,7 @@ class ArticlePager: PagingSource<Int, Article>() {
 
         val authToken = Session.getAuthToken()
         val response = api.getAllArticles(authToken, startkey * loadSize)
-        Log.d(TAG, "fetch token after getAllArticlesMethod: $authToken")
+
         return when {
             response.isSuccessful -> {
                 val body = response.body()

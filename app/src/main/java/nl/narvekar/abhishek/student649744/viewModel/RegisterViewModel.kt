@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.RegisterUserResponse
 import nl.narvekar.abhishek.student649744.data.User
@@ -32,7 +33,7 @@ class RegisterViewModel : ViewModel() {
                 response: Response<RegisterUserResponse>
             ) {
                 if (response.code() == 201) {
-                    Toast.makeText(context, "Registeration Successful!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.ui_register_successful_message), Toast.LENGTH_SHORT).show()
 
                     navController.navigate(Routes.Login.route) {
                         popUpTo(Routes.Register.route) {
@@ -41,7 +42,7 @@ class RegisterViewModel : ViewModel() {
                     }
                 }
                 else {
-                    Toast.makeText(context, "Registration failure: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.ui_register_failure_message) + " " + response.message(), Toast.LENGTH_SHORT).show()
                 }
             }
         }

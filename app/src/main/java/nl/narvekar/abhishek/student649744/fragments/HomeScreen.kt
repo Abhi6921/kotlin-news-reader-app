@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -51,7 +52,7 @@ fun HomeScreen(
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
-                title = "News Articles",
+                title = stringResource(R.string.ui_home_screen_title),
                 articleViewModel,
                 loginViewModel
             )
@@ -105,7 +106,7 @@ fun HomeScreen(
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "error loading from api")
+                                Text(text = stringResource(R.string.ui_cannot_load_articles_from_api))
                             }
                         }
                     }
@@ -187,7 +188,7 @@ fun ArticleItem(
                 Column() {
                     Icon(
                         imageVector = Icons.Filled.Favorite,
-                        contentDescription = "favorite icon"
+                        contentDescription = null
                     )
                 }
             }
