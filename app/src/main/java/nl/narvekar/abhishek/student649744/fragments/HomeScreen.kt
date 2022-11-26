@@ -43,7 +43,6 @@ import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     articleViewModel: ArticleViewModel,
     loginViewModel: LoginViewModel
 ) {
@@ -52,7 +51,6 @@ fun HomeScreen(
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
-                sharedPreferences = sharedPreferences,
                 title = "News Articles",
                 articleViewModel,
                 loginViewModel
@@ -121,7 +119,6 @@ fun HomeScreen(
 @Composable
 fun TopAppBarForArticles(
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     title: String,
     articleViewModel: ArticleViewModel,
     loginViewModel: LoginViewModel
@@ -145,7 +142,7 @@ fun TopAppBarForArticles(
             }
             IconButton(onClick = {
                 coroutineScope.launch {
-                    loginViewModel.signOut(sharedPreferences, navController)
+                    loginViewModel.signOut(navController)
                 }
                 //loginViewModel.logout(sharedPreferences, navController)
             }) {

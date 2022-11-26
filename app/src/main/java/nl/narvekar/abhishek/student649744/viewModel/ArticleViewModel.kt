@@ -10,10 +10,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 
-class ArticleViewModel(authToken: String) : ViewModel() {
+class ArticleViewModel : ViewModel() {
 
     val articles = Pager(PagingConfig(pageSize = 20)) {
-        ArticlePager(authToken)
+        ArticlePager()
     }.flow.cachedIn(viewModelScope)
 
 }

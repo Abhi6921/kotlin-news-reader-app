@@ -29,12 +29,11 @@ import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
     // this commit is from the security branch
-    lateinit var sharedPreferences: SharedPreferences
     val favoritesViewModel by viewModels<FavoritesViewModel>()
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
     val loginViewModel by viewModels<LoginViewModel>()
     val registerViewModel by viewModels<RegisterViewModel>()
-    //val articleViewModel by viewModels<ArticleViewModel>()
+    val articleViewModel by viewModels<ArticleViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,17 +42,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Student649744Theme {
-                sharedPreferences = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE)
-                val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
 
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    val articleViewModel = ArticleViewModel(authToken)
+
                     NavigationScreen(
-                        sharedPreferences,
                         articleViewModel,
                         favoritesViewModel,
-                        authToken,
                         articleDetailViewModel,
                         loginViewModel,
                         registerViewModel

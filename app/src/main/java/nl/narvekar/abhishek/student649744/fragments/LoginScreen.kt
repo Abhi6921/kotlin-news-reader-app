@@ -32,7 +32,6 @@ import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     loginViewModel: LoginViewModel
 ) {
     Column(
@@ -88,7 +87,7 @@ fun LoginScreen(
                                     context, User(
                                         username.value.text,
                                         password.value.text
-                                    ), navController, sharedPreferences
+                                    ), navController
                                 )
                             }
 

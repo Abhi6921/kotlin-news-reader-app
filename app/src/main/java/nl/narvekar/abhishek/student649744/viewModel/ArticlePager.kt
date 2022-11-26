@@ -15,7 +15,7 @@ import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 import nl.narvekar.abhishek.student649744.data.ArticleMapper
 
-class ArticlePager(val authToken: String): PagingSource<Int, Article>() {
+class ArticlePager: PagingSource<Int, Article>() {
 
     private val articleMapper = ArticleMapper()
 

@@ -33,7 +33,6 @@ import kotlin.math.log
 @Composable
 fun FavoritesScreen(
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     articles: List<Article>,
     articleViewModel: ArticleViewModel,
     favoritesViewModel: FavoritesViewModel,
@@ -44,7 +43,6 @@ fun FavoritesScreen(
     Scaffold(topBar = {
         TopAppBarForArticles(
             navController = navController,
-            sharedPreferences = sharedPreferences,
             title = "Favorites",
             articleViewModel,
             loginViewModel

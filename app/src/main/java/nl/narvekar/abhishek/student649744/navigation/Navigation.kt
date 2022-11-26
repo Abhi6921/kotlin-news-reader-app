@@ -20,10 +20,8 @@ const val ARTICLE_ID_KEY = "Id"
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationScreen(
-    sharedPreferences: SharedPreferences,
     articleViewModel: ArticleViewModel,
     favoritesViewModel: FavoritesViewModel,
-    authToken: String,
     articleDetailViewModel: ArticleDetailViewModel,
     loginViewModel: LoginViewModel,
     registerViewModel: RegisterViewModel
@@ -37,7 +35,6 @@ fun NavigationScreen(
         composable(route = Routes.Login.route) {
             LoginScreen(
                 navController = navController,
-                sharedPreferences = sharedPreferences,
                 loginViewModel = loginViewModel
             )
         }
@@ -50,7 +47,6 @@ fun NavigationScreen(
         composable(route = Routes.Home.route) {
             HomeScreen(
                 navController,
-                sharedPreferences,
                 articleViewModel,
                 loginViewModel
             )
@@ -64,7 +60,6 @@ fun NavigationScreen(
             ArticleDetailScreen(
                 navController,
                 navBackStackEntry.arguments!!.getInt(ARTICLE_ID_KEY),
-                sharedPreferences,
                 favoritesViewModel,
                 articleDetailViewModel
             )
@@ -73,7 +68,6 @@ fun NavigationScreen(
         composable(route = Routes.Favorites.route) {
             FavoritesScreen(
                 navController,
-                sharedPreferences,
                 favoritesViewModel.favoritesListResponse.results,
                 articleViewModel,
                 favoritesViewModel,

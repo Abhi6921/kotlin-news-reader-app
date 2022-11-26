@@ -28,8 +28,7 @@ class LoginViewModel : ViewModel() {
 
     suspend fun loginUser(context: Context,
               user: User,
-              navController: NavController,
-              sharedPreferences: SharedPreferences
+              navController: NavController
     ) {
         val retrofitInstance = NewsApi.getInstance()
         viewModelScope.launch(Dispatchers.IO) {
@@ -68,15 +67,11 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    suspend fun signIn(context: Context,
-                       user: User,
-                       navController: NavController,
-                       sharedPreferences: SharedPreferences) {
-        loginUser(context, user, navController, sharedPreferences)
+    suspend fun signIn(context: Context, user: User, navController: NavController) {
+        loginUser(context, user, navController)
     }
 
     suspend fun logout(
-        sharedPreferences: SharedPreferences,
         navController: NavController
     ) {
         // clear authToken
@@ -93,8 +88,8 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    suspend fun signOut(sharedPreferences: SharedPreferences, navController: NavController) {
-        logout(sharedPreferences, navController)
+    suspend fun signOut(navController: NavController) {
+        logout(navController)
     }
 
     private fun saveData(username: String, password: String, authToken: String) {

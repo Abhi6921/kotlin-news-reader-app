@@ -50,7 +50,6 @@ import java.util.*
 fun ArticleDetailScreen(
     navController: NavController,
     detailId: Int,
-    sharedPreferences: SharedPreferences,
     favoritesViewModel: FavoritesViewModel,
    articleDetailViewModel: ArticleDetailViewModel
 ) {
@@ -95,7 +94,7 @@ fun ArticleDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
 
-                    FavoriteButton(favoritesViewModel, sharedPreferences, article)
+                    FavoriteButton(favoritesViewModel, article)
 
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
                     Text(
@@ -154,7 +153,6 @@ fun ArticleDetailScreen(
 @Composable
 fun FavoriteButton(
     favoritesViewModel: FavoritesViewModel,
-    sharedPreferences: SharedPreferences,
     article: Article
 ) {
     var isFavorite by remember { mutableStateOf(article.IsLiked) }
