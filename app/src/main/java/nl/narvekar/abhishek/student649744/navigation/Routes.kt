@@ -2,6 +2,7 @@ package nl.narvekar.abhishek.student649744.navigation
 
 
 sealed class Routes(val route: String) {
+    object Splash: Routes(route = "splash")
     object Login: Routes(route = "login")
     object Home: Routes(route = "home")
     object Register: Routes(route = "register")
@@ -9,6 +10,6 @@ sealed class Routes(val route: String) {
     object Favorites: Routes(route = "favorites")
 
     companion object {
-        fun getDestination() = Login.route
+        fun getDestination() = Splash.route
     }
 }

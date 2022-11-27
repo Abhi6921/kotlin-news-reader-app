@@ -30,8 +30,11 @@ fun NavigationScreen(
     val AuthToken = Session.getAuthToken()
     NavHost(
         navController = navController,
-        startDestination =   if (AuthToken.isEmpty())  { Routes.getDestination() } else { Routes.Home.route }
+        startDestination =  Routes.getDestination() //if (AuthToken.isEmpty())  { Routes.getDestination() } else { Routes.Home.route }
     ) {
+        composable(route = Routes.Splash.route) {
+            SplashScreen(navController = navController)
+        }
         composable(route = Routes.Login.route) {
             LoginScreen(
                 navController = navController,

@@ -24,6 +24,7 @@ import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
+import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
@@ -41,6 +42,8 @@ fun FavoritesScreen(
 ) {
     val sessionToken = Session.getAuthToken()
     favoritesViewModel.getFavoriteArticles(authToken = sessionToken)
+    var isLoading = favoritesViewModel.isLoading.value
+
     Scaffold(topBar = {
         TopAppBarForArticles(
             navController = navController,
@@ -59,10 +62,11 @@ fun FavoritesScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = stringResource(R.string.ui_no_favorite_articles))
+                    Text(text = favoritesViewModel.errorMessage.toString())
                 }
             }
             else {
+                ProgressBarLoading(Modifier.padding(innerPadding), isLoading = isLoading)
                 LazyColumn(Modifier.padding(innerPadding)) {
                     items(articles) { article ->
                         FavoritesArticleItem(article = article) {

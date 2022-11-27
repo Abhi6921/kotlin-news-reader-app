@@ -56,8 +56,7 @@ fun ArticleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    val AuthToken = Session.getAuthToken()
-    val article: Article? = articleDetailViewModel.getArticleById(AuthToken, detailId).results.firstOrNull()
+    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
 
     val uriHandler = LocalUriHandler.current
 

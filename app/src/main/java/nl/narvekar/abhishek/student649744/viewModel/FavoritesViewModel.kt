@@ -1,12 +1,17 @@
 package nl.narvekar.abhishek.student649744.viewModel
 
+import android.provider.Settings.Secure.getString
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
@@ -14,19 +19,29 @@ import nl.narvekar.abhishek.student649744.data.ArticleList
 class FavoritesViewModel : ViewModel() {
     var favoritesListResponse: ArticleList by mutableStateOf(ArticleList())
     var errorMessage: String by mutableStateOf("")
+    var isLoading = mutableStateOf(false)
+    val responseError: String =  String.format(R.string.ui_no_favorite_articles.toString())
 
     fun getFavoriteArticles(authToken: String) {
         viewModelScope.launch {
             val apiService = NewsApi.getInstance()
+            isLoading.value = true
             try {
                 val articles = apiService.getAllLikedArticles(authToken)
+                if (articles.results.isEmpty()) {
+                    isLoading.value = true
+                    errorMessage = R.string.ui_no_favorite_articles.toString()
+                    isLoading.value = false
+                }
                 favoritesListResponse = articles
+                isLoading.value = false
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
                 Log.d("Error: ", errorMessage)
             }
         }
     }
+
 
     fun likeArticle(authToken: String, id: Int) {
         viewModelScope.launch {
