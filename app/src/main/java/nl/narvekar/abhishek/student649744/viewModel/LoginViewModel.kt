@@ -1,15 +1,17 @@
 package nl.narvekar.abhishek.student649744.viewModel
 
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
 import nl.narvekar.abhishek.student649744.data.LoginResponse
 import nl.narvekar.abhishek.student649744.data.User
@@ -18,12 +20,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class LoginViewModel : ViewModel() {
 
-    fun loginUser(context: Context,
+    suspend fun loginUser(context: Context,
               user: User,
-              navController: NavController,
-              sharedPreferences: SharedPreferences
+              navController: NavController
     ) {
         val retrofitInstance = NewsApi.getInstance()
         viewModelScope.launch(Dispatchers.IO) {
@@ -34,15 +36,15 @@ class LoginViewModel : ViewModel() {
                     }
                     override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
-                        val authToken = response.body()?.AuthToken
-
                         if (response.code() == 200 && response.isSuccessful) {
-                            //print(authToken)
-                            val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                            editor.putString(AUTH_TOKEN_KEY, authToken).toString()
-                            editor.apply()
 
-                            Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+                              val authToken = response.body()?.AuthToken
+
+                            if (authToken != null) {
+                                saveData(user.UserName, user.Password, authToken)
+                            }
+
+                            Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_successful_message), Toast.LENGTH_SHORT).show()
                             navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Login.route) {
                                     inclusive = true
@@ -50,25 +52,23 @@ class LoginViewModel : ViewModel() {
                             }
                         }
                         else {
-                            Toast.makeText(context, "Login failure!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_failure_message), Toast.LENGTH_SHORT).show()
                         }
                     }
 
                 })
             delay(6000)
         }
-
     }
 
-    fun logout(
-        sharedPreferences: SharedPreferences,
+    suspend fun signIn(context: Context, user: User, navController: NavController) {
+        loginUser(context, user, navController)
+    }
+
+    suspend fun logout(
         navController: NavController
     ) {
-        // clear authToken
-        val editor = sharedPreferences.edit()
-        editor.putString(AUTH_TOKEN_KEY, "")
-        editor.clear()
-        editor.apply()
+        Session.removeData()
 
         navController.navigate(Routes.Login.route) {
             popUpTo(Routes.Home.route) {
@@ -76,4 +76,13 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun signOut(navController: NavController) {
+        logout(navController)
+    }
+
+    private fun saveData(username: String, password: String, authToken: String) {
+        Session.saveData(username, password, authToken)
+    }
 }
+

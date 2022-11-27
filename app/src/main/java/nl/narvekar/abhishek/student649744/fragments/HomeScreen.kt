@@ -12,11 +12,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -25,7 +27,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.Constants
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
@@ -40,21 +44,15 @@ import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     articleViewModel: ArticleViewModel,
     loginViewModel: LoginViewModel
 ) {
     Student649744Theme {
-        LaunchedEffect(key1 = Unit) {
-            delay(6000)
-        }
-
         val articles = articleViewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(
                 navController = navController,
-                sharedPreferences = sharedPreferences,
-                title = "News Articles",
+                title = stringResource(R.string.ui_home_screen_title),
                 articleViewModel,
                 loginViewModel
             )
@@ -108,7 +106,7 @@ fun HomeScreen(
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "error loading from api")
+                                Text(text = stringResource(R.string.ui_cannot_load_articles_from_api))
                             }
                         }
                     }
@@ -122,12 +120,12 @@ fun HomeScreen(
 @Composable
 fun TopAppBarForArticles(
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     title: String,
     articleViewModel: ArticleViewModel,
     loginViewModel: LoginViewModel
 ) {
     val articles = articleViewModel.articles.collectAsLazyPagingItems()
+    val coroutineScope = rememberCoroutineScope()
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
         title = {
@@ -144,7 +142,10 @@ fun TopAppBarForArticles(
                 Icon(Icons.Filled.Refresh, null)
             }
             IconButton(onClick = {
-                loginViewModel.logout(sharedPreferences, navController)
+                coroutineScope.launch {
+                    loginViewModel.signOut(navController)
+                }
+                //loginViewModel.logout(sharedPreferences, navController)
             }) {
                 Icon(Icons.Filled.ExitToApp, contentDescription = null)
             }
@@ -187,7 +188,7 @@ fun ArticleItem(
                 Column() {
                     Icon(
                         imageVector = Icons.Filled.Favorite,
-                        contentDescription = "favorite icon"
+                        contentDescription = null
                     )
                 }
             }
@@ -212,21 +213,3 @@ fun ProfilePictureArticle(article: Article, profilePicSize: Dp) {
         )
     }
 }
-
-
-//fun logout(
-//    sharedPreferences: SharedPreferences,
-//    navController: NavController
-//) {
-//    // clear authToken
-//    val editor = sharedPreferences.edit()
-//    editor.putString(AUTH_TOKEN_KEY, "")
-//    editor.clear()
-//    editor.apply()
-//
-//    navController.navigate(Routes.Login.route) {
-//        popUpTo(Routes.Home.route) {
-//            inclusive = true
-//        }
-//    }
-//}

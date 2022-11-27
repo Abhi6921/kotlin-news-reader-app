@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -35,6 +36,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
@@ -49,16 +51,12 @@ import java.util.*
 fun ArticleDetailScreen(
     navController: NavController,
     detailId: Int,
-    sharedPreferences: SharedPreferences,
     favoritesViewModel: FavoritesViewModel,
    articleDetailViewModel: ArticleDetailViewModel
 ) {
-
     val scrollState = rememberScrollState()
 
-    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-
-    val article: Article? = articleDetailViewModel.getArticleById(authToken, detailId).results.firstOrNull()
+    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
 
     val uriHandler = LocalUriHandler.current
 
@@ -67,7 +65,7 @@ fun ArticleDetailScreen(
             TopAppBar(
                 elevation = 4.dp,
                 title = {
-                    Text(text = "News Detail Screen")
+                    Text(text = stringResource(R.string.ui_topbar_newsdetail_title))
                 },
                 backgroundColor = MaterialTheme.colors.primary,
                 navigationIcon = {
@@ -83,7 +81,7 @@ fun ArticleDetailScreen(
                 if (article != null) {
                     AsyncImage(
                         model = article.Image,
-                        contentDescription = "Article Image",
+                        contentDescription = stringResource(R.string.ui_article_image),
                         modifier = Modifier.size(500.dp),
                         contentScale = ContentScale.Crop,
                         placeholder =  painterResource(R.drawable.placeholder)
@@ -96,7 +94,7 @@ fun ArticleDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
 
-                    FavoriteButton(favoritesViewModel, sharedPreferences, article)
+                    FavoriteButton(favoritesViewModel, article)
 
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
                     Text(
@@ -108,10 +106,9 @@ fun ArticleDetailScreen(
                     )
 
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    //Text(text = "Full article at nos.nl")
-                    val text = "open in browser"
+                    //val text = "open in browser"
                     ClickableText(
-                        text = AnnotatedString(text),
+                        text = AnnotatedString(stringResource(R.string.ui_open_in_borwser_text)),
                         style = TextStyle(
                             color = MaterialTheme.colors.onSurface,
                             fontSize = 16.sp
@@ -123,7 +120,8 @@ fun ArticleDetailScreen(
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
 
                     var articleDate = LocalDateTime.parse(article.PublishDate)
-                    var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
+                    //var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
+                    var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.ui_date_time_format), Locale.GERMANY)
                     var formattedArticleDate = articleDate.format(formatter)
 
                     Text(
@@ -141,7 +139,7 @@ fun ArticleDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "This article has no description",
+                            text = stringResource(R.string.ui_no_article_description),
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold
                         )
@@ -156,25 +154,22 @@ fun ArticleDetailScreen(
 @Composable
 fun FavoriteButton(
     favoritesViewModel: FavoritesViewModel,
-    sharedPreferences: SharedPreferences,
     article: Article
 ) {
     var isFavorite by remember { mutableStateOf(article.IsLiked) }
 
-    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-    Log.d("Token articleDetail", "authToken: $authToken")
-
+    val AuthToken = Session.getAuthToken()
     val context = LocalContext.current
 
     IconButton(
         onClick = {
             isFavorite = !isFavorite
             if (isFavorite) {
-                favoritesViewModel.likeArticle(authToken, article.Id)
-                Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
+                favoritesViewModel.likeArticle(AuthToken, article.Id)
+                Toast.makeText(context, context.getString(R.string.saved_to_favorites_message), Toast.LENGTH_SHORT).show()
             } else {
-                favoritesViewModel.removeArticle(authToken, article.Id)
-                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+                favoritesViewModel.removeArticle(AuthToken, article.Id)
+                Toast.makeText(context, context.getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT).show()
             }
         }
     ) {

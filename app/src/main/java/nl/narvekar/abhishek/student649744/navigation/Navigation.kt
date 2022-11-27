@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.fragments.*
 import nl.narvekar.abhishek.student649744.viewModel.*
@@ -19,23 +20,24 @@ const val ARTICLE_ID_KEY = "Id"
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationScreen(
-    sharedPreferences: SharedPreferences,
     articleViewModel: ArticleViewModel,
     favoritesViewModel: FavoritesViewModel,
-    authToken: String,
     articleDetailViewModel: ArticleDetailViewModel,
     loginViewModel: LoginViewModel,
     registerViewModel: RegisterViewModel
 ) {
     val navController = rememberNavController()
+    val AuthToken = Session.getAuthToken()
     NavHost(
         navController = navController,
-        startDestination = if (authToken.isEmpty()) { Routes.getDestination() } else { Routes.Home.route }
+        startDestination =  Routes.getDestination()
     ) {
+        composable(route = Routes.Splash.route) {
+            SplashScreen(navController = navController)
+        }
         composable(route = Routes.Login.route) {
             LoginScreen(
                 navController = navController,
-                sharedPreferences = sharedPreferences,
                 loginViewModel = loginViewModel
             )
         }
@@ -48,7 +50,6 @@ fun NavigationScreen(
         composable(route = Routes.Home.route) {
             HomeScreen(
                 navController,
-                sharedPreferences,
                 articleViewModel,
                 loginViewModel
             )
@@ -62,7 +63,6 @@ fun NavigationScreen(
             ArticleDetailScreen(
                 navController,
                 navBackStackEntry.arguments!!.getInt(ARTICLE_ID_KEY),
-                sharedPreferences,
                 favoritesViewModel,
                 articleDetailViewModel
             )
@@ -71,7 +71,6 @@ fun NavigationScreen(
         composable(route = Routes.Favorites.route) {
             FavoritesScreen(
                 navController,
-                sharedPreferences,
                 favoritesViewModel.favoritesListResponse.results,
                 articleViewModel,
                 favoritesViewModel,

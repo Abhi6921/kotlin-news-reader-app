@@ -15,13 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
+import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
@@ -32,20 +35,19 @@ import kotlin.math.log
 @Composable
 fun FavoritesScreen(
     navController: NavController,
-    sharedPreferences: SharedPreferences,
     articles: List<Article>,
     articleViewModel: ArticleViewModel,
     favoritesViewModel: FavoritesViewModel,
     loginViewModel: LoginViewModel
 ) {
-    val authToken = sharedPreferences.getString(AUTH_TOKEN_KEY, "").toString()
-    favoritesViewModel.getFavoriteArticles(authToken)
+    val sessionToken = Session.getAuthToken()
+    favoritesViewModel.getFavoriteArticles(authToken = sessionToken)
+    var isLoading = favoritesViewModel.isLoading.value
 
     Scaffold(topBar = {
         TopAppBarForArticles(
             navController = navController,
-            sharedPreferences = sharedPreferences,
-            title = "Favorites",
+            title = stringResource(R.string.ui_topbar_favorites_title),
             articleViewModel,
             loginViewModel
         )
@@ -60,10 +62,11 @@ fun FavoritesScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "You have no favorite articles")
+                    Text(text = favoritesViewModel.errorMessage.toString())
                 }
             }
             else {
+                ProgressBarLoading(Modifier.padding(innerPadding), isLoading = isLoading)
                 LazyColumn(Modifier.padding(innerPadding)) {
                     items(articles) { article ->
                         FavoritesArticleItem(article = article) {
@@ -112,10 +115,9 @@ fun FavoritesArticleItem(
                 //Spacer(modifier = Modifier.height(25.dp))
                 Icon(
                     imageVector = Icons.Filled.Favorite,
-                    contentDescription = "favorite icon"
+                    contentDescription = null
                 )
             }
-
         }
 
     }

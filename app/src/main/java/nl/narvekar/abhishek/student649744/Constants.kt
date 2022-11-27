@@ -5,5 +5,7 @@ object Constants {
     const val EMPTY_STRING = ""
     const val PREF_KEY = "PrefKey"
     var AUTH_TOKEN_KEY = "AuthToken"
+    var USERNAME = "username"
+    var PASSWORD = "password"
 
 }
