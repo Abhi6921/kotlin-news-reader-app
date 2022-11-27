@@ -41,7 +41,7 @@ class ArticlePager: PagingSource<Int, Article>() {
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
 
         val authToken = Session.getAuthToken()
-        val response = api.getAllArticles(authToken, startkey * loadSize)
+        val response = api.getAllArticles(authToken, loadSize)
 
         return when {
             response.isSuccessful -> {
