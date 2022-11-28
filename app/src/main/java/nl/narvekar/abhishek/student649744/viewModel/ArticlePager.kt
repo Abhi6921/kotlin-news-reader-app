@@ -1,16 +1,9 @@
 package nl.narvekar.abhishek.student649744.viewModel
 
-import android.content.ContentValues.TAG
-import android.content.SharedPreferences
-import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import nl.narvekar.abhishek.student649744.Constants
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
-import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 import nl.narvekar.abhishek.student649744.data.ArticleMapper
@@ -23,10 +16,7 @@ class ArticlePager: PagingSource<Int, Article>() {
 
     override val keyReuseSupported: Boolean = true
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPageIndex = state.pages.indexOf(state.closestPageToPosition(anchorPosition))
-            state.pages.getOrNull(anchorPageIndex + 1)?.prevKey ?: state.pages.getOrNull(anchorPageIndex - 1)?.nextKey
-        }
+        return null
     }
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         val nextPage = params.key ?: 1

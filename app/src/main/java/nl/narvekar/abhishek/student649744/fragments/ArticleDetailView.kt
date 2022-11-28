@@ -158,17 +158,16 @@ fun FavoriteButton(
 ) {
     var isFavorite by remember { mutableStateOf(article.IsLiked) }
 
-    val AuthToken = Session.getAuthToken()
     val context = LocalContext.current
 
     IconButton(
         onClick = {
             isFavorite = !isFavorite
             if (isFavorite) {
-                favoritesViewModel.likeArticle(AuthToken, article.Id)
+                favoritesViewModel.likeArticle(article.Id)
                 Toast.makeText(context, context.getString(R.string.saved_to_favorites_message), Toast.LENGTH_SHORT).show()
             } else {
-                favoritesViewModel.removeArticle(AuthToken, article.Id)
+                favoritesViewModel.removeArticle(article.Id)
                 Toast.makeText(context, context.getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT).show()
             }
         }
