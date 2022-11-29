@@ -1,12 +1,11 @@
 package nl.narvekar.abhishek.student649744.fragments
 
-import android.content.SharedPreferences
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -16,11 +15,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -32,11 +30,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import nl.narvekar.abhishek.student649744.R
-import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
@@ -55,10 +54,9 @@ fun ArticleDetailScreen(
    articleDetailViewModel: ArticleDetailViewModel
 ) {
     val scrollState = rememberScrollState()
-
     val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
-
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -74,7 +72,22 @@ fun ArticleDetailScreen(
                     }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
-                })
+                },
+                actions = {
+                    IconButton(onClick = {
+                            val share = Intent.createChooser(Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, article?.Url)
+                                putExtra(Intent.EXTRA_TITLE, article?.Title)
+                                type = "message/rfc822"
+                            }, null)
+
+                        startActivity(context, Intent.createChooser(share, null), null)
+                    }) {
+                        Icon(Icons.Default.Share, contentDescription = null)
+                    }
+                }
+            )
         },
         content = {
             Column(modifier = Modifier.verticalScroll(state = scrollState)) {

@@ -1,6 +1,7 @@
 package nl.narvekar.abhishek.student649744.fragments
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -17,11 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -126,15 +129,14 @@ fun TopAppBarForArticles(
 ) {
     val articles = articleViewModel.articles.collectAsLazyPagingItems()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     androidx.compose.material.TopAppBar(
         elevation = 4.dp,
         title = {
             Text(text = title)
         },
         backgroundColor = MaterialTheme.colors.primary,
-        navigationIcon = {
-
-        }, actions = {
+        actions = {
             IconButton(onClick = {
                articles.refresh()
             }) {

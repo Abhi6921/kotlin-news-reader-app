@@ -40,8 +40,8 @@ fun FavoritesScreen(
     favoritesViewModel: FavoritesViewModel,
     loginViewModel: LoginViewModel
 ) {
-    val sessionToken = Session.getAuthToken()
-    favoritesViewModel.getFavoriteArticles(authToken = sessionToken)
+
+    favoritesViewModel.getFavoriteArticles()
     var isLoading = favoritesViewModel.isLoading.value
 
     Scaffold(topBar = {
@@ -69,7 +69,7 @@ fun FavoritesScreen(
                 ProgressBarLoading(Modifier.padding(innerPadding), isLoading = isLoading)
                 LazyColumn(Modifier.padding(innerPadding)) {
                     items(articles) { article ->
-                        FavoritesArticleItem(article = article) {
+                        FavoritesArticleItem(article = article, isLiked = article.IsLiked) {
                             navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
                         }
                     }
@@ -80,10 +80,12 @@ fun FavoritesScreen(
     )
 }
 
+//https://www.nu.nl/eindhoven/6050288/man-bijt-agent-in-been-na-aanhouding-in-woning-in-gemert.html
 //@Preview(showBackground = true)
 @Composable
 fun FavoritesArticleItem(
     article: Article,
+    isLiked: Boolean,
     onClickAction: (Article) -> Unit
 ) {
     Card(

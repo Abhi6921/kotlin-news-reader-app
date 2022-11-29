@@ -22,9 +22,10 @@ class FavoritesViewModel : ViewModel() {
     var errorMessage: String by mutableStateOf("")
     var isLoading = mutableStateOf(false)
 
-    fun getFavoriteArticles(authToken: String) {
+    fun getFavoriteArticles() {
         viewModelScope.launch {
             val apiService = NewsApi.getInstance()
+            val authToken = Session.getAuthToken()
             isLoading.value = true
             try {
                 val articles = apiService.getAllLikedArticles(authToken)
@@ -46,8 +47,8 @@ class FavoritesViewModel : ViewModel() {
     fun likeArticle(id: Int) {
         viewModelScope.launch {
             val apiService = NewsApi.getInstance()
-            val authToken = Session.getAuthToken()
-            val response = apiService.addLikedArticle(authToken, id)
+            // val authToken = Session.getAuthToken()
+            val response = apiService.addLikedArticle(Session.getAuthToken(), id)
 
             if (response.isSuccessful) {
                 Log.d("Added to like article", "article liked")
@@ -61,8 +62,8 @@ class FavoritesViewModel : ViewModel() {
     fun removeArticle(id: Int) {
         viewModelScope.launch {
             val apiService = NewsApi.getInstance()
-            val authToken = Session.getAuthToken()
-            val response = apiService.removeLikedArticle(authToken, id)
+            //val authToken = Session.getAuthToken()
+            val response = apiService.removeLikedArticle(Session.getAuthToken(), id)
 
             if (response.isSuccessful) {
                 Log.d("Successful", "article removed")
