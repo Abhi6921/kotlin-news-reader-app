@@ -13,7 +13,9 @@ class ArticleMapper {
                     PublishDate,
                     Image,
                     Url,
-                    IsLiked
+                    Related,
+                    Categories,
+                    IsLiked,
                 )
             }
         }

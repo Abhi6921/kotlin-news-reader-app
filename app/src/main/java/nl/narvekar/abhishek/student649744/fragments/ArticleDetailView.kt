@@ -28,6 +28,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
@@ -90,7 +91,9 @@ fun ArticleDetailScreen(
             )
         },
         content = {
-            Column(modifier = Modifier.verticalScroll(state = scrollState)) {
+            Column(modifier = Modifier
+                .verticalScroll(state = scrollState)
+                .fillMaxSize()) {
                 if (article != null) {
                     AsyncImage(
                         model = article.Image,
@@ -134,7 +137,8 @@ fun ArticleDetailScreen(
 
                     var articleDate = LocalDateTime.parse(article.PublishDate)
                     //var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
-                    var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.ui_date_time_format), Locale.GERMANY)
+                    //var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.ui_date_time_format), Locale.GERMANY)
+                    var formatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm a", Locale.GERMANY)
                     var formattedArticleDate = articleDate.format(formatter)
 
                     Text(
@@ -143,7 +147,52 @@ fun ArticleDetailScreen(
                         style = MaterialTheme.typography.body1,
                         fontFamily = FontFamily.Monospace
                     )
+                    Divider(modifier = Modifier.padding(bottom = 4.dp))
 
+                    if (article.Related.isNotEmpty()) {
+                        Text(
+                            text = "Related Articles",
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.h6,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        var count: Int = 0
+                        for (articleRelated in article.Related) {
+                            count += 1
+                            ClickableText(
+                                text = AnnotatedString("view article $count"),
+                                modifier = Modifier.padding(4.dp),
+                                style = TextStyle(
+                                    color = MaterialTheme.colors.onSurface,
+                                    fontSize = 16.sp
+                                ),
+                                onClick = {
+                                    uriHandler.openUri(articleRelated)
+                                }
+                            )
+                        }
+                    }
+                    Divider(modifier = Modifier.padding(bottom = 4.dp))
+                    Text(
+                        text = "Categories",
+                        style = MaterialTheme.typography.h6,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    for (category in article.Categories) {
+                        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                            Button(
+                                onClick = { /*TODO*/ },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+                            ) {
+                                Text(
+                                    text = category.Name,
+                                    style = TextStyle(fontSize = 15.sp)
+                                )
+                            }
+                        }
+                    }
                 }
                 else {
                     Column(
@@ -186,6 +235,36 @@ fun FavoriteButton(
         }
     ) {
         Icon(imageVector = if (isFavorite) { Icons.Filled.Favorite } else { Icons.Filled.FavoriteBorder }, contentDescription = "favorite icon")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HorizontalButtons() {
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly
+
+    ) {
+        Button(onClick = { /*TODO*/ }) {
+            Text(
+                text = "Category 1",
+                style = TextStyle(fontSize = 15.sp)
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        Button(onClick = { /*TODO*/ }) {
+            Text(
+                text = "Category 2",
+                style = TextStyle(fontSize = 15.sp)
+            )
+        }
+        Spacer(modifier = Modifier.width(15.dp))
+        Button(onClick = { /*TODO*/ }) {
+            Text(
+                text = "Category 4",
+                style = TextStyle(fontSize = 15.sp)
+            )
+        }
     }
 }
 
