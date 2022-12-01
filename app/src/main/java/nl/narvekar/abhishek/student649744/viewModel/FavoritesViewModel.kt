@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.R
+import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 
@@ -20,17 +22,19 @@ class FavoritesViewModel : ViewModel() {
     var favoritesListResponse: ArticleList by mutableStateOf(ArticleList())
     var errorMessage: String by mutableStateOf("")
     var isLoading = mutableStateOf(false)
-    val responseError: String =  String.format(R.string.ui_no_favorite_articles.toString())
 
-    fun getFavoriteArticles(authToken: String) {
+    private val retrofit = RetrofitInstance.getInstance()
+    //private val apiInterface = retrofit.create(NewsApi::class.java)
+
+    fun getFavoriteArticles() {
         viewModelScope.launch {
-            val apiService = NewsApi.getInstance()
-            isLoading.value = true
             try {
-                val articles = apiService.getAllLikedArticles(authToken)
+                isLoading.value = true
+                val authToken = Session.getAuthToken()
+                val articles = retrofit.getAllLikedArticles(authToken)
                 if (articles.results.isEmpty()) {
                     isLoading.value = true
-                    errorMessage = R.string.ui_no_favorite_articles.toString()
+                    errorMessage = "You have no favorite articles"
                     isLoading.value = false
                 }
                 favoritesListResponse = articles
@@ -42,11 +46,11 @@ class FavoritesViewModel : ViewModel() {
         }
     }
 
-
-    fun likeArticle(authToken: String, id: Int) {
+    fun likeArticle(id: Int) {
         viewModelScope.launch {
-            val apiService = NewsApi.getInstance()
-            val response = apiService.addLikedArticle(authToken, id)
+
+            // val authToken = Session.getAuthToken()
+            val response = retrofit.addLikedArticle(Session.getAuthToken(), id)
 
             if (response.isSuccessful) {
                 Log.d("Added to like article", "article liked")
@@ -57,10 +61,10 @@ class FavoritesViewModel : ViewModel() {
         }
     }
 
-    fun removeArticle(authToken: String, id: Int) {
+    fun removeArticle(id: Int) {
         viewModelScope.launch {
-            val apiService = NewsApi.getInstance()
-            val response = apiService.removeLikedArticle(authToken, id)
+            val authToken = Session.getAuthToken()
+            val response = retrofit.removeLikedArticle(authToken, id)
 
             if (response.isSuccessful) {
                 Log.d("Successful", "article removed")

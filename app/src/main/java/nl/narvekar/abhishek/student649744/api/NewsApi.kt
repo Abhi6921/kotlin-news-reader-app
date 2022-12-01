@@ -22,6 +22,7 @@ interface NewsApi {
     @GET("api/Articles/{id}")
     suspend fun getArticleById(@Header("x-authtoken") authToken: String, @Path("id") Id: Int) : ArticleList
 
+
     @Headers("Content-Type:application/json")
     @GET("api/Articles")
     suspend fun getAllArticles(@Header("x-authtoken") authToken: String, @Query("count") count: Int) : Response<ArticleList>
@@ -41,19 +42,5 @@ interface NewsApi {
         @Header("x-authtoken") authToken: String,
         @Path("id") articleId: Int
     ) : Response<Unit>
-
-
-    companion object {
-        var apiService: NewsApi? = null
-        fun getInstance() : NewsApi {
-            if (apiService == null) {
-                apiService = Retrofit.Builder()
-                    .baseUrl("https://inhollandbackend.azurewebsites.net/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build().create(NewsApi::class.java)
-            }
-            return apiService!!
-        }
-    }
 
 }

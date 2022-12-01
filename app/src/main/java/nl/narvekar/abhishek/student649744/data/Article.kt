@@ -8,5 +8,12 @@ data class Article(
     val PublishDate: String,
     val Image: String,
     val Url: String,
-    var IsLiked: Boolean
+    val Related: List<String>,
+    val Categories: List<Category>,
+    val IsLiked: Boolean
+)
+
+data class Category(
+    val Id: Int,
+    val Name: String
 )

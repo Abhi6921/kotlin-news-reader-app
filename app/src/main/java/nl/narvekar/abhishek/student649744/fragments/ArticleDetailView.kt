@@ -1,12 +1,11 @@
 package nl.narvekar.abhishek.student649744.fragments
 
-import android.content.SharedPreferences
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -16,11 +15,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -30,14 +28,17 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import nl.narvekar.abhishek.student649744.R
-import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.data.Article
+import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
 import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
@@ -55,10 +56,14 @@ fun ArticleDetailScreen(
    articleDetailViewModel: ArticleDetailViewModel
 ) {
     val scrollState = rememberScrollState()
-
-    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
-
+    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.find {
+        it.Id == detailId
+    }
+    
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
+
+    val articleLoading = articleDetailViewModel.isLoading.value
 
     Scaffold(
         topBar = {
@@ -74,11 +79,27 @@ fun ArticleDetailScreen(
                     }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
-                })
+                },
+                actions = {
+                    IconButton(onClick = {
+                            val share = Intent.createChooser(Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, article?.Url)
+                                putExtra(Intent.EXTRA_SUBJECT, "Breaking News!")
+                                putExtra(Intent.EXTRA_TITLE, article?.Title)
+                                type = "message/rfc822"
+                            }, null)
+
+                        startActivity(context, Intent.createChooser(share, null), null)
+                    }) {
+                        Icon(Icons.Default.Share, contentDescription = null)
+                    }
+                }
+            )
         },
         content = {
-            Column(modifier = Modifier.verticalScroll(state = scrollState)) {
-                if (article != null) {
+            if(article != null) {
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
                     AsyncImage(
                         model = article.Image,
                         contentDescription = stringResource(R.string.ui_article_image),
@@ -104,9 +125,7 @@ fun ArticleDetailScreen(
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Bold
                     )
-
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    //val text = "open in browser"
                     ClickableText(
                         text = AnnotatedString(stringResource(R.string.ui_open_in_borwser_text)),
                         style = TextStyle(
@@ -120,8 +139,7 @@ fun ArticleDetailScreen(
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
 
                     var articleDate = LocalDateTime.parse(article.PublishDate)
-                    //var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
-                    var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.ui_date_time_format), Locale.GERMANY)
+                    var formatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm a", Locale.GERMANY)
                     var formattedArticleDate = articleDate.format(formatter)
 
                     Text(
@@ -130,21 +148,63 @@ fun ArticleDetailScreen(
                         style = MaterialTheme.typography.body1,
                         fontFamily = FontFamily.Monospace
                     )
-
-                }
-                else {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    Divider(modifier = Modifier.padding(bottom = 4.dp))
+                    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
                         Text(
-                            text = stringResource(R.string.ui_no_article_description),
-                            fontFamily = FontFamily.SansSerif,
-                            fontWeight = FontWeight.Bold
+                            text = stringResource(R.string.ui_categories_text),
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.body1
+                        )
+                        article.Categories.forEach { Item ->
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = Item.Name,
+                                modifier = Modifier.padding(4.dp),
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+                    var count: Int = 0
+                    article.Related.forEach { articleUrl ->
+                        count += 1
+                        ClickableText(
+                                modifier = Modifier.padding(4.dp),
+                                text = AnnotatedString("related article: $count"),
+                                style = TextStyle(
+                                    color = MaterialTheme.colors.onSurface,
+                                    fontSize = 16.sp
+                                ),
+                                onClick = {
+                                    uriHandler.openUri(articleUrl)
+                                }
                         )
                     }
+                }
 
+            }
+            else if (articleLoading)  {
+                Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                ) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colors.onSurface
+                        )
+                }
+            }
+            else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.ui_no_favorite_articles),
+                        modifier = Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.body1,
+                        fontFamily = FontFamily.Monospace
+                    )
                 }
             }
         }
@@ -158,22 +218,39 @@ fun FavoriteButton(
 ) {
     var isFavorite by remember { mutableStateOf(article.IsLiked) }
 
-    val AuthToken = Session.getAuthToken()
     val context = LocalContext.current
 
     IconButton(
         onClick = {
             isFavorite = !isFavorite
             if (isFavorite) {
-                favoritesViewModel.likeArticle(AuthToken, article.Id)
+                favoritesViewModel.likeArticle(article.Id)
                 Toast.makeText(context, context.getString(R.string.saved_to_favorites_message), Toast.LENGTH_SHORT).show()
             } else {
-                favoritesViewModel.removeArticle(AuthToken, article.Id)
+                favoritesViewModel.removeArticle(article.Id)
                 Toast.makeText(context, context.getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT).show()
             }
         }
     ) {
         Icon(imageVector = if (isFavorite) { Icons.Filled.Favorite } else { Icons.Filled.FavoriteBorder }, contentDescription = "favorite icon")
     }
+}
+
+@Composable
+fun UICheck() {
+//    Column(
+//        modifier = Modifier.fillMaxSize(),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        if(!articleLoading) {
+//            Text(
+//                text = stringResource(R.string.ui_no_article_description),
+//                fontFamily = FontFamily.SansSerif,
+//                fontWeight = FontWeight.Bold
+//            )
+//        }
+//    }
+
 }
 
