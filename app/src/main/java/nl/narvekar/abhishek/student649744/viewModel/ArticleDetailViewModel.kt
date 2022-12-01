@@ -22,14 +22,14 @@ class ArticleDetailViewModel : ViewModel() {
     var isLoading = mutableStateOf(false)
 
     private val retrofit = RetrofitInstance.getInstance()
-    private val apiInterface = retrofit.create(NewsApi::class.java)
+    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     fun getArticleById(Id: Int) : ArticleList {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 isLoading.value = true
                 val authToken = Session.getAuthToken()
-                val article = apiInterface.getArticleById(authToken, Id)
+                val article = retrofit.getArticleById(authToken, Id)
                 articleResponse = article
                 isLoading.value = false
             }catch (e: Exception) {

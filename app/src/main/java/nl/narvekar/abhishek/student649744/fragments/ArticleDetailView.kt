@@ -56,7 +56,7 @@ fun ArticleDetailScreen(
    articleDetailViewModel: ArticleDetailViewModel
 ) {
     val scrollState = rememberScrollState()
-    val article = articleDetailViewModel.getArticleById(detailId).results.find {
+    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.find {
         it.Id == detailId
     }
     
@@ -98,12 +98,8 @@ fun ArticleDetailScreen(
             )
         },
         content = {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(state = scrollState)
-                    .fillMaxSize()
-            ) {
-                if (article != null) {
+            if(article != null) {
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
                     AsyncImage(
                         model = article.Image,
                         contentDescription = stringResource(R.string.ui_article_image),
@@ -153,11 +149,14 @@ fun ArticleDetailScreen(
                         fontFamily = FontFamily.Monospace
                     )
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    
                     Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                        Text(text = stringResource(R.string.ui_categories_text))
+                        Text(
+                            text = stringResource(R.string.ui_categories_text),
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.body1
+                        )
                         article.Categories.forEach { Item ->
-                            Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = Item.Name,
                                 modifier = Modifier.padding(4.dp),
@@ -167,29 +166,45 @@ fun ArticleDetailScreen(
                         }
                     }
                     var count: Int = 0
-                    article.Related.forEach { article ->
+                    article.Related.forEach { articleUrl ->
                         count += 1
                         ClickableText(
-                                text = AnnotatedString("link $count"),
+                                modifier = Modifier.padding(4.dp),
+                                text = AnnotatedString("related article: $count"),
                                 style = TextStyle(
                                     color = MaterialTheme.colors.onSurface,
                                     fontSize = 16.sp
                                 ),
                                 onClick = {
-                                    uriHandler.openUri(article)
+                                    uriHandler.openUri(articleUrl)
                                 }
                         )
                     }
                 }
-                else {
-                    Box(
+
+            }
+            else if (articleLoading)  {
+                Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
-                    ) {
+                ) {
                         CircularProgressIndicator(
                             color = MaterialTheme.colors.onSurface
                         )
-                    }
+                }
+            }
+            else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.ui_no_favorite_articles),
+                        modifier = Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.body1,
+                        fontFamily = FontFamily.Monospace
+                    )
                 }
             }
         }

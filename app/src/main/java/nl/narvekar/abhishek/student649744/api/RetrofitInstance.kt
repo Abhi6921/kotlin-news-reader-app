@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
 
-    fun getInstance() : Retrofit {
+    fun getInstance() : NewsApi {
         var httpLoggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -27,6 +27,6 @@ object RetrofitInstance {
             .client(mOkHttpClient)
             .build()
 
-        return retrofit
+        return retrofit.create(NewsApi::class.java)
     }
 }

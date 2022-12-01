@@ -25,7 +25,7 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
 
     private val retrofit = RetrofitInstance.getInstance()
-    private val apiInterface = retrofit.create(NewsApi::class.java)
+    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     suspend fun loginUser(context: Context,
               user: User,
@@ -33,7 +33,7 @@ class LoginViewModel : ViewModel() {
     ) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            apiInterface.loginUser(user).enqueue(
+            retrofit.loginUser(user).enqueue(
                 object : Callback<LoginResponse> {
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()

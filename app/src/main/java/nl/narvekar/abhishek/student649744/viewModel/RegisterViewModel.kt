@@ -17,7 +17,7 @@ import retrofit2.Response
 class RegisterViewModel : ViewModel() {
 
     private val retrofit = RetrofitInstance.getInstance()
-    private val apiInterface = retrofit.create(NewsApi::class.java)
+    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     fun signup(
         context: Context,
@@ -25,7 +25,7 @@ class RegisterViewModel : ViewModel() {
         navController: NavController
     ) {
 
-        apiInterface.postANewUser(user).enqueue(object :
+        retrofit.postANewUser(user).enqueue(object :
             Callback<RegisterUserResponse> {
             override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
                 Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()

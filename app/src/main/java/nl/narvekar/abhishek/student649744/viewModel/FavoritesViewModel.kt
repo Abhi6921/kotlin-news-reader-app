@@ -24,15 +24,14 @@ class FavoritesViewModel : ViewModel() {
     var isLoading = mutableStateOf(false)
 
     private val retrofit = RetrofitInstance.getInstance()
-    private val apiInterface = retrofit.create(NewsApi::class.java)
+    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     fun getFavoriteArticles() {
         viewModelScope.launch {
-
-            val authToken = Session.getAuthToken()
-            isLoading.value = true
             try {
-                val articles = apiInterface.getAllLikedArticles(authToken)
+                isLoading.value = true
+                val authToken = Session.getAuthToken()
+                val articles = retrofit.getAllLikedArticles(authToken)
                 if (articles.results.isEmpty()) {
                     isLoading.value = true
                     errorMessage = "You have no favorite articles"
@@ -51,7 +50,7 @@ class FavoritesViewModel : ViewModel() {
         viewModelScope.launch {
 
             // val authToken = Session.getAuthToken()
-            val response = apiInterface.addLikedArticle(Session.getAuthToken(), id)
+            val response = retrofit.addLikedArticle(Session.getAuthToken(), id)
 
             if (response.isSuccessful) {
                 Log.d("Added to like article", "article liked")
@@ -65,7 +64,7 @@ class FavoritesViewModel : ViewModel() {
     fun removeArticle(id: Int) {
         viewModelScope.launch {
             val authToken = Session.getAuthToken()
-            val response = apiInterface.removeLikedArticle(authToken, id)
+            val response = retrofit.removeLikedArticle(authToken, id)
 
             if (response.isSuccessful) {
                 Log.d("Successful", "article removed")
