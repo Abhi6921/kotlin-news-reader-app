@@ -43,18 +43,4 @@ interface NewsApi {
         @Path("id") articleId: Int
     ) : Response<Unit>
 
-
-//    companion object {
-//        var apiService: NewsApi? = null
-//        fun getInstance() : NewsApi {
-//            if (apiService == null) {
-//                apiService = Retrofit.Builder()
-//                    .baseUrl("https://inhollandbackend.azurewebsites.net/")
-//                    .addConverterFactory(GsonConverterFactory.create())
-//                    .build().create(NewsApi::class.java)
-//            }
-//            return apiService!!
-//        }
-//    }
-
 }

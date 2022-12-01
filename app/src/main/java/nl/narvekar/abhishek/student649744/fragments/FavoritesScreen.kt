@@ -87,20 +87,8 @@ fun FavoritesScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (articles.isEmpty()) {
-                        Text(
-                            text = stringResource(R.string.ui_no_favorite_articles),
-                            modifier = Modifier.padding(4.dp),
-                            style = MaterialTheme.typography.body1,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
-                    else {
                         CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
-                    }
-
                 }
-
             }
         }
 
