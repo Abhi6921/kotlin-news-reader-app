@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList
 
@@ -22,13 +23,16 @@ class FavoritesViewModel : ViewModel() {
     var errorMessage: String by mutableStateOf("")
     var isLoading = mutableStateOf(false)
 
+    private val retrofit = RetrofitInstance.getInstance()
+    private val apiInterface = retrofit.create(NewsApi::class.java)
+
     fun getFavoriteArticles() {
         viewModelScope.launch {
-            val apiService = NewsApi.getInstance()
+
             val authToken = Session.getAuthToken()
             isLoading.value = true
             try {
-                val articles = apiService.getAllLikedArticles(authToken)
+                val articles = apiInterface.getAllLikedArticles(authToken)
                 if (articles.results.isEmpty()) {
                     isLoading.value = true
                     errorMessage = "You have no favorite articles"
@@ -45,9 +49,9 @@ class FavoritesViewModel : ViewModel() {
 
     fun likeArticle(id: Int) {
         viewModelScope.launch {
-            val apiService = NewsApi.getInstance()
+
             // val authToken = Session.getAuthToken()
-            val response = apiService.addLikedArticle(Session.getAuthToken(), id)
+            val response = apiInterface.addLikedArticle(Session.getAuthToken(), id)
 
             if (response.isSuccessful) {
                 Log.d("Added to like article", "article liked")
@@ -60,9 +64,8 @@ class FavoritesViewModel : ViewModel() {
 
     fun removeArticle(id: Int) {
         viewModelScope.launch {
-            val apiService = NewsApi.getInstance()
             val authToken = Session.getAuthToken()
-            val response = apiService.removeLikedArticle(authToken, id)
+            val response = apiInterface.removeLikedArticle(authToken, id)
 
             if (response.isSuccessful) {
                 Log.d("Successful", "article removed")

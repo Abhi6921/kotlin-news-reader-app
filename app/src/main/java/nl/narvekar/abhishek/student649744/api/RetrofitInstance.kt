@@ -8,21 +8,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    private val client = OkHttpClient
-        .Builder()
-        .callTimeout(2, TimeUnit.MINUTES)
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL) // change this IP for testing by your actual machine IP
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build()
+    fun getInstance() : Retrofit {
+        var httpLoggingInterceptor = HttpLoggingInterceptor()
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
 
-    fun<T> buildService(service: Class<T>): T{
-        return retrofit.create(service)
+        var mOkHttpClient = OkHttpClient
+            .Builder()
+            .callTimeout(2, TimeUnit.MINUTES)
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+
+        var retrofit: Retrofit = retrofit2.Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(mOkHttpClient)
+            .build()
+
+        return retrofit
     }
 }

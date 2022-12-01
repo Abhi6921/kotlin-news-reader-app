@@ -13,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.Session
 import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.LoginResponse
 import nl.narvekar.abhishek.student649744.data.User
 import nl.narvekar.abhishek.student649744.navigation.Routes
@@ -23,13 +24,16 @@ import retrofit2.Response
 
 class LoginViewModel : ViewModel() {
 
+    private val retrofit = RetrofitInstance.getInstance()
+    private val apiInterface = retrofit.create(NewsApi::class.java)
+
     suspend fun loginUser(context: Context,
               user: User,
               navController: NavController
     ) {
-        val retrofitInstance = NewsApi.getInstance()
+
         viewModelScope.launch(Dispatchers.IO) {
-            retrofitInstance.loginUser(user).enqueue(
+            apiInterface.loginUser(user).enqueue(
                 object : Callback<LoginResponse> {
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()

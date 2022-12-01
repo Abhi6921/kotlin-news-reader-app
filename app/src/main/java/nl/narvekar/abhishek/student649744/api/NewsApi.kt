@@ -44,17 +44,17 @@ interface NewsApi {
     ) : Response<Unit>
 
 
-    companion object {
-        var apiService: NewsApi? = null
-        fun getInstance() : NewsApi {
-            if (apiService == null) {
-                apiService = Retrofit.Builder()
-                    .baseUrl("https://inhollandbackend.azurewebsites.net/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build().create(NewsApi::class.java)
-            }
-            return apiService!!
-        }
-    }
+//    companion object {
+//        var apiService: NewsApi? = null
+//        fun getInstance() : NewsApi {
+//            if (apiService == null) {
+//                apiService = Retrofit.Builder()
+//                    .baseUrl("https://inhollandbackend.azurewebsites.net/")
+//                    .addConverterFactory(GsonConverterFactory.create())
+//                    .build().create(NewsApi::class.java)
+//            }
+//            return apiService!!
+//        }
+//    }
 
 }

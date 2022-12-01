@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.RegisterUserResponse
 import nl.narvekar.abhishek.student649744.data.User
 import nl.narvekar.abhishek.student649744.navigation.Routes
@@ -15,14 +16,16 @@ import retrofit2.Response
 
 class RegisterViewModel : ViewModel() {
 
+    private val retrofit = RetrofitInstance.getInstance()
+    private val apiInterface = retrofit.create(NewsApi::class.java)
+
     fun signup(
         context: Context,
         user: User,
         navController: NavController
     ) {
-        val retrofitInstance = NewsApi.getInstance()
 
-        retrofitInstance.postANewUser(user).enqueue(object :
+        apiInterface.postANewUser(user).enqueue(object :
             Callback<RegisterUserResponse> {
             override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
                 Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
