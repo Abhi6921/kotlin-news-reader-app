@@ -31,7 +31,7 @@ import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
 import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
-    // this commit is from code refactor and clean up branch
+    // this commit is from network connection branch
     val favoritesViewModel by viewModels<FavoritesViewModel>()
     val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
     val loginViewModel by viewModels<LoginViewModel>()
