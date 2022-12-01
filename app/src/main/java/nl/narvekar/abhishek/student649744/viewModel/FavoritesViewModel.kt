@@ -43,7 +43,6 @@ class FavoritesViewModel : ViewModel() {
         }
     }
 
-
     fun likeArticle(id: Int) {
         viewModelScope.launch {
             val apiService = NewsApi.getInstance()
@@ -62,8 +61,8 @@ class FavoritesViewModel : ViewModel() {
     fun removeArticle(id: Int) {
         viewModelScope.launch {
             val apiService = NewsApi.getInstance()
-            //val authToken = Session.getAuthToken()
-            val response = apiService.removeLikedArticle(Session.getAuthToken(), id)
+            val authToken = Session.getAuthToken()
+            val response = apiService.removeLikedArticle(authToken, id)
 
             if (response.isSuccessful) {
                 Log.d("Successful", "article removed")

@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -65,7 +66,7 @@ fun HomeScreen(
             },
             content = { innerPadding ->
                 LazyColumn(Modifier.padding(innerPadding)) {
-                    items(articles) { article ->
+                    itemsIndexed(articles) { item, article ->
                         if (article != null) {
                             ArticleItem(article = article, isLiked = article.IsLiked) {
                                 navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
@@ -75,7 +76,6 @@ fun HomeScreen(
                     }
 
                 }
-                
                 articles.apply {
                     when {
                         loadState.refresh is LoadState.Loading -> {

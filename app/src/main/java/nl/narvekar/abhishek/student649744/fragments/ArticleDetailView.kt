@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
+import nl.narvekar.abhishek.student649744.fragments.components.ProgressBarLoading
 import nl.narvekar.abhishek.student649744.viewModel.ArticleDetailViewModel
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
 import nl.narvekar.abhishek.student649744.viewModel.FavoritesViewModel
@@ -55,9 +56,14 @@ fun ArticleDetailScreen(
    articleDetailViewModel: ArticleDetailViewModel
 ) {
     val scrollState = rememberScrollState()
-    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.firstOrNull()
+    val article = articleDetailViewModel.getArticleById(detailId).results.find {
+        it.Id == detailId
+    }
+    
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
+
+    val articleLoading = articleDetailViewModel.isLoading.value
 
     Scaffold(
         topBar = {
@@ -79,6 +85,7 @@ fun ArticleDetailScreen(
                             val share = Intent.createChooser(Intent().apply {
                                 action = Intent.ACTION_SEND
                                 putExtra(Intent.EXTRA_TEXT, article?.Url)
+                                putExtra(Intent.EXTRA_SUBJECT, "Breaking News!")
                                 putExtra(Intent.EXTRA_TITLE, article?.Title)
                                 type = "message/rfc822"
                             }, null)
@@ -91,9 +98,11 @@ fun ArticleDetailScreen(
             )
         },
         content = {
-            Column(modifier = Modifier
-                .verticalScroll(state = scrollState)
-                .fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(state = scrollState)
+                    .fillMaxSize()
+            ) {
                 if (article != null) {
                     AsyncImage(
                         model = article.Image,
@@ -120,9 +129,7 @@ fun ArticleDetailScreen(
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Bold
                     )
-
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    //val text = "open in browser"
                     ClickableText(
                         text = AnnotatedString(stringResource(R.string.ui_open_in_borwser_text)),
                         style = TextStyle(
@@ -136,8 +143,6 @@ fun ArticleDetailScreen(
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
 
                     var articleDate = LocalDateTime.parse(article.PublishDate)
-                    //var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a", Locale.GERMANY)
-                    //var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.ui_date_time_format), Locale.GERMANY)
                     var formatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm a", Locale.GERMANY)
                     var formattedArticleDate = articleDate.format(formatter)
 
@@ -148,65 +153,43 @@ fun ArticleDetailScreen(
                         fontFamily = FontFamily.Monospace
                     )
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
-
-                    if (article.Related.isNotEmpty()) {
-                        Text(
-                            text = "Related Articles",
-                            modifier = Modifier.padding(4.dp),
-                            style = MaterialTheme.typography.h6,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        var count: Int = 0
-                        for (articleRelated in article.Related) {
-                            count += 1
-                            ClickableText(
-                                text = AnnotatedString("view article $count"),
+                    
+                    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                        Text(text = stringResource(R.string.ui_categories_text))
+                        article.Categories.forEach { Item ->
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = Item.Name,
                                 modifier = Modifier.padding(4.dp),
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+                    var count: Int = 0
+                    article.Related.forEach { article ->
+                        count += 1
+                        ClickableText(
+                                text = AnnotatedString("link $count"),
                                 style = TextStyle(
                                     color = MaterialTheme.colors.onSurface,
                                     fontSize = 16.sp
                                 ),
                                 onClick = {
-                                    uriHandler.openUri(articleRelated)
+                                    uriHandler.openUri(article)
                                 }
-                            )
-                        }
-                    }
-                    Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    Text(
-                        text = "Categories",
-                        style = MaterialTheme.typography.h6,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    for (category in article.Categories) {
-                        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                            Button(
-                                onClick = { /*TODO*/ },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-                            ) {
-                                Text(
-                                    text = category.Name,
-                                    style = TextStyle(fontSize = 15.sp)
-                                )
-                            }
-                        }
+                        )
                     }
                 }
                 else {
-                    Column(
+                    Box(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = stringResource(R.string.ui_no_article_description),
-                            fontFamily = FontFamily.SansSerif,
-                            fontWeight = FontWeight.Bold
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colors.onSurface
                         )
                     }
-
                 }
             }
         }
@@ -238,33 +221,21 @@ fun FavoriteButton(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun HorizontalButtons() {
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly
+fun UICheck() {
+//    Column(
+//        modifier = Modifier.fillMaxSize(),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        if(!articleLoading) {
+//            Text(
+//                text = stringResource(R.string.ui_no_article_description),
+//                fontFamily = FontFamily.SansSerif,
+//                fontWeight = FontWeight.Bold
+//            )
+//        }
+//    }
 
-    ) {
-        Button(onClick = { /*TODO*/ }) {
-            Text(
-                text = "Category 1",
-                style = TextStyle(fontSize = 15.sp)
-            )
-        }
-        Spacer(modifier = Modifier.width(14.dp))
-        Button(onClick = { /*TODO*/ }) {
-            Text(
-                text = "Category 2",
-                style = TextStyle(fontSize = 15.sp)
-            )
-        }
-        Spacer(modifier = Modifier.width(15.dp))
-        Button(onClick = { /*TODO*/ }) {
-            Text(
-                text = "Category 4",
-                style = TextStyle(fontSize = 15.sp)
-            )
-        }
-    }
 }
 

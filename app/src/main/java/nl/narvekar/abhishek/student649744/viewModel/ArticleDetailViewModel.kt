@@ -18,13 +18,18 @@ import nl.narvekar.abhishek.student649744.data.ArticleList
 class ArticleDetailViewModel : ViewModel() {
     var articleResponse: ArticleList by mutableStateOf(ArticleList())
     var errorMessage: String by mutableStateOf("")
+
+    var isLoading = mutableStateOf(false)
+
     fun getArticleById(Id: Int) : ArticleList {
         viewModelScope.launch(Dispatchers.IO) {
             val apiService = NewsApi.getInstance()
             try {
+                isLoading.value = true
                 val authToken = Session.getAuthToken()
                 val article = apiService.getArticleById(authToken, Id)
                 articleResponse = article
+                isLoading.value = false
             }catch (e: Exception) {
                 errorMessage = e.message.toString()
                 Log.d("", errorMessage)
