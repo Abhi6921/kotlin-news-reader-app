@@ -22,7 +22,7 @@ import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
-    // this commit is from network connection branch
+    // this commit is from MAIN branch
     private val favoritesViewModel by viewModels<FavoritesViewModel>()
     private val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
     private val loginViewModel by viewModels<LoginViewModel>()
