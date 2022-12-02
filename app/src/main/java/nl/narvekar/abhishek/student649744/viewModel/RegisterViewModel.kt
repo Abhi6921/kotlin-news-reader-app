@@ -35,12 +35,10 @@ class RegisterViewModel : ViewModel() {
                 call: Call<RegisterUserResponse>,
                 response: Response<RegisterUserResponse>
             ) {
+                // we check the response code 200 because the api is returning http status of 200
                 if (response.code() == 201 || response.code() == 200) {
                     Toast.makeText(context, context.getString(R.string.ui_register_successful_message), Toast.LENGTH_LONG).show()
 
-                    //val success = response.body()?.Success
-
-                    showMessageOnRegister.value = true
 
                     navController.navigate(Routes.Login.route) {
                         popUpTo(Routes.Register.route) {
