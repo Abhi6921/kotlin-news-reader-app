@@ -139,11 +139,11 @@ fun ArticleDetailScreen(
                     Divider(modifier = Modifier.padding(bottom = 4.dp))
 
                     var articleDate = LocalDateTime.parse(article.PublishDate)
-                    var formatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm a", Locale.GERMANY)
+                    var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.date_time_formatter), Locale.GERMANY)
                     var formattedArticleDate = articleDate.format(formatter)
 
                     Text(
-                        text = "Published on: $formattedArticleDate",
+                        text = stringResource(R.string.ui_article_date_time, formattedArticleDate),
                         modifier = Modifier.padding(4.dp),
                         style = MaterialTheme.typography.body1,
                         fontFamily = FontFamily.Monospace
@@ -170,7 +170,7 @@ fun ArticleDetailScreen(
                         count += 1
                         ClickableText(
                                 modifier = Modifier.padding(4.dp),
-                                text = AnnotatedString("related article: $count"),
+                                text = AnnotatedString(stringResource(R.string.ui_view_related_articles, count)),
                                 style = TextStyle(
                                     color = MaterialTheme.colors.onSurface,
                                     fontSize = 16.sp
@@ -200,7 +200,7 @@ fun ArticleDetailScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(R.string.ui_no_favorite_articles),
+                        text = stringResource(R.string.ui_no_article_description),
                         modifier = Modifier.padding(4.dp),
                         style = MaterialTheme.typography.body1,
                         fontFamily = FontFamily.Monospace

@@ -56,17 +56,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun CheckInternetConnection(
-    isNetworkAvailable : Boolean
-) {
-    var connectionString = ""
-    if (!isNetworkAvailable) {
-        connectionString = "No Internet Connection! Please connect to your internet"
-    }
-    Text(text = "$connectionString", fontSize = 25.sp)
-}
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {

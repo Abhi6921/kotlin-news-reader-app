@@ -42,11 +42,11 @@ class RegisterViewModel : ViewModel() {
 
                     showMessageOnRegister.value = true
 
-//                    navController.navigate(Routes.Login.route) {
-//                        popUpTo(Routes.Register.route) {
-//                            inclusive = true
-//                        }
-//                    }
+                    navController.navigate(Routes.Login.route) {
+                        popUpTo(Routes.Register.route) {
+                            inclusive = true
+                        }
+                    }
                 }
                 else {
                     Toast.makeText(context, context.getString(R.string.ui_register_failure_message) + " " + response.message(), Toast.LENGTH_LONG).show()

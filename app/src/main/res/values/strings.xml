@@ -44,7 +44,9 @@
     <string name="saved_to_favorites_message">saved to favorites!</string>
     <string name="removed_from_favorites">Article Removed from favorites</string>
     <string name="ui_categories_text">categories</string>
-
+    <string name="date_time_formatter">dd-MMMM-yyyy HH:mm a</string>
+    <string name="ui_article_date_time">Published on: %1$s</string>
+    <string name="ui_view_related_articles">view related article: %1$s</string>
 
 
 </resources>

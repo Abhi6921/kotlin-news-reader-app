@@ -13,7 +13,6 @@ class ArticlePager: PagingSource<Int, Article>() {
     private val articleMapper = ArticleMapper()
 
     private val retrofit = RetrofitInstance.getInstance()
-    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     override val keyReuseSupported: Boolean = true
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
@@ -32,7 +31,7 @@ class ArticlePager: PagingSource<Int, Article>() {
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
 
         val authToken = Session.getAuthToken()
-        val response = retrofit.getAllArticles(authToken, loadSize)
+        val response = retrofit.getAllArticles(authToken, loadSize.coerceIn(1, 30))
 
         return when {
             response.isSuccessful -> {

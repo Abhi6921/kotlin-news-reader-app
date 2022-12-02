@@ -25,11 +25,6 @@ class FavoritesViewModel : ViewModel() {
                 isLoading.value = true
                 val authToken = Session.getAuthToken()
                 val articles = retrofit.getAllLikedArticles(authToken)
-                if (articles.results.isEmpty()) {
-                    isLoading.value = true
-                    errorMessage = "You have no favorite articles"
-                    isLoading.value = false
-                }
                 favoritesListResponse = articles
                 isLoading.value = false
             } catch (e: Exception) {
