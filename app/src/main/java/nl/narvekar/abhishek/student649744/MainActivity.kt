@@ -1,37 +1,24 @@
 package nl.narvekar.abhishek.student649744
 
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import androidx.paging.compose.collectAsLazyPagingItems
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
-import nl.narvekar.abhishek.student649744.Constants.PREF_KEY
 import nl.narvekar.abhishek.student649744.connectionManager.NetworkConnectionLiveData
 import nl.narvekar.abhishek.student649744.navigation.NavigationScreen
 import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
+import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
@@ -77,9 +64,6 @@ fun CheckInternetConnection(
     if (!isNetworkAvailable) {
         connectionString = "No Internet Connection! Please connect to your internet"
     }
-//    else {
-//        connectionString = "Connected Successfully!"
-//    }
     Text(text = "$connectionString", fontSize = 25.sp)
 }
 

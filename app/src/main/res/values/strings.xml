@@ -22,6 +22,11 @@
     <string name="ui_register_successful_message">Registration Successful!</string>
     <string name="ui_register_failure_message">Registeration Failure!:</string>
 
+    <!--Register Dialog Strings-->
+    <string name="ui_dialog_title_text">Message</string>
+    <string name="ui_success_dialog_message">User Registered Successfully</string>
+    <string name="ui_dismiss_button_text">Dismiss</string>
+
     <!--HomeScreen Strings-->
     <string name="ui_home_screen_title">News Articles</string>
     <string name="ui_cannot_load_articles_from_api">Error loading articles from database</string>

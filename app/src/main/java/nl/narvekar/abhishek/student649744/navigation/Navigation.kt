@@ -1,17 +1,14 @@
 package nl.narvekar.abhishek.student649744.navigation
 
-import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import nl.narvekar.abhishek.student649744.Session
-import nl.narvekar.abhishek.student649744.data.Article
+import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.fragments.*
 import nl.narvekar.abhishek.student649744.viewModel.*
 

@@ -2,17 +2,13 @@ package nl.narvekar.abhishek.student649744.viewModel
 
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import nl.narvekar.abhishek.student649744.Session
-import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.LoginResponse
 import nl.narvekar.abhishek.student649744.data.User

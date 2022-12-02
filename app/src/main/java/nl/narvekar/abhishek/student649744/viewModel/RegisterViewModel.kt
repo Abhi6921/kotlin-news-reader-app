@@ -2,6 +2,7 @@ package nl.narvekar.abhishek.student649744.viewModel
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import nl.narvekar.abhishek.student649744.R
@@ -17,7 +18,7 @@ import retrofit2.Response
 class RegisterViewModel : ViewModel() {
 
     private val retrofit = RetrofitInstance.getInstance()
-
+    val showMessageOnRegister = mutableStateOf(false)
     fun signup(
         context: Context,
         user: User,
@@ -34,17 +35,21 @@ class RegisterViewModel : ViewModel() {
                 call: Call<RegisterUserResponse>,
                 response: Response<RegisterUserResponse>
             ) {
-                if (response.code() == 201) {
-                    Toast.makeText(context, context.getString(R.string.ui_register_successful_message), Toast.LENGTH_SHORT).show()
+                if (response.code() == 201 || response.code() == 200) {
+                    Toast.makeText(context, context.getString(R.string.ui_register_successful_message), Toast.LENGTH_LONG).show()
 
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Register.route) {
-                            inclusive = true
-                        }
-                    }
+                    //val success = response.body()?.Success
+
+                    showMessageOnRegister.value = true
+
+//                    navController.navigate(Routes.Login.route) {
+//                        popUpTo(Routes.Register.route) {
+//                            inclusive = true
+//                        }
+//                    }
                 }
                 else {
-                    Toast.makeText(context, context.getString(R.string.ui_register_failure_message) + " " + response.message(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.ui_register_failure_message) + " " + response.message(), Toast.LENGTH_LONG).show()
                 }
             }
         }
