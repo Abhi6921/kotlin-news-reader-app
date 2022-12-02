@@ -2,17 +2,13 @@ package nl.narvekar.abhishek.student649744.viewModel
 
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import nl.narvekar.abhishek.student649744.Session
-import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.LoginResponse
 import nl.narvekar.abhishek.student649744.data.User
@@ -25,7 +21,6 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
 
     private val retrofit = RetrofitInstance.getInstance()
-    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     suspend fun loginUser(context: Context,
               user: User,
@@ -45,7 +40,7 @@ class LoginViewModel : ViewModel() {
                               val authToken = response.body()?.AuthToken
 
                             if (authToken != null) {
-                                saveData(user.UserName, user.Password, authToken)
+                                storeUserCredentials(user.UserName, user.Password, authToken)
                             }
 
                             Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_successful_message), Toast.LENGTH_SHORT).show()
@@ -61,7 +56,6 @@ class LoginViewModel : ViewModel() {
                     }
 
                 })
-            delay(6000)
         }
     }
 
@@ -72,7 +66,7 @@ class LoginViewModel : ViewModel() {
     suspend fun logout(
         navController: NavController
     ) {
-        Session.removeData()
+        Session.removeUserData()
 
         navController.navigate(Routes.Login.route) {
             popUpTo(Routes.Home.route) {
@@ -85,8 +79,8 @@ class LoginViewModel : ViewModel() {
         logout(navController)
     }
 
-    private fun saveData(username: String, password: String, authToken: String) {
-        Session.saveData(username, password, authToken)
+    private fun storeUserCredentials(username: String, password: String, authToken: String) {
+        Session.saveUserData(username, password, authToken)
     }
 }
 

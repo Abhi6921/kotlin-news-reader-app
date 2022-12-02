@@ -1,9 +1,6 @@
 package nl.narvekar.abhishek.student649744.fragments
 
-import android.content.ContentValues.TAG
-import android.content.Intent
-import android.content.SharedPreferences
-import android.util.Log
+import android.graphics.Paint.Align
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,11 +9,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -24,24 +19,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import nl.narvekar.abhishek.student649744.Constants
-import nl.narvekar.abhishek.student649744.Constants.AUTH_TOKEN_KEY
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
-import nl.narvekar.abhishek.student649744.ui.theme.Student649744Theme
-import nl.narvekar.abhishek.student649744.viewModel.ArticlePager
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
 import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 
@@ -49,9 +37,30 @@ import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 fun HomeScreen(
     navController: NavController,
     articleViewModel: ArticleViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    isNetworkAvailable: Boolean
 ) {
-    Student649744Theme {
+    if (!isNetworkAvailable) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier.padding(14.dp),
+                text = stringResource(R.string.ui_no_internet_connection),
+                fontSize = 20.sp,
+                color = MaterialTheme.colors.onSurface
+            )
+            Text(
+                modifier = Modifier.padding(14.dp),
+                text = stringResource(R.string.ui_connect_to_wifi_or_mobile_data_message),
+                fontSize = 15.sp,
+                color = MaterialTheme.colors.onSurface
+            )
+        }
+    }
+    else {
         val articles = articleViewModel.articles.collectAsLazyPagingItems()
         Scaffold(topBar = {
             TopAppBarForArticles(
@@ -117,7 +126,6 @@ fun HomeScreen(
             }
         )
     }
-
 }
 
 @Composable

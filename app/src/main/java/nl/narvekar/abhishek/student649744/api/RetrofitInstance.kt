@@ -1,6 +1,6 @@
 package nl.narvekar.abhishek.student649744.api
 
-import nl.narvekar.abhishek.student649744.Constants.BASE_URL
+import nl.narvekar.abhishek.student649744.utils.Constants.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

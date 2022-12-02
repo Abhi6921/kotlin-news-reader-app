@@ -1,7 +1,6 @@
 package nl.narvekar.abhishek.student649744.fragments
 
 import android.view.animation.OvershootInterpolator
-import android.window.SplashScreen
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -13,20 +12,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import nl.narvekar.abhishek.student649744.R
-import nl.narvekar.abhishek.student649744.Session
+import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.navigation.Routes
 
 
 @Composable
 fun SplashScreen(navController: NavController) {
 
-    // if token is empty show splash screen and then navigate to home screen
-    // else show splash screen and then navigate to Home screen
-    val authToken = Session.getAuthToken()
+    val isUserLoggedIn = Session.isUserLoggedIn()
+
     val scale = remember {
         Animatable(0f)
     }
@@ -42,7 +39,7 @@ fun SplashScreen(navController: NavController) {
         )
         // display the duration amount for splash screen
         delay(3000L)
-        if (authToken.isEmpty()) {
+        if (!isUserLoggedIn) {
             navController.navigate(Routes.Login.route)
         }
         else {

@@ -1,12 +1,10 @@
 package nl.narvekar.abhishek.student649744.fragments
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,22 +14,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import nl.narvekar.abhishek.student649744.Constants.BASE_URL
 import nl.narvekar.abhishek.student649744.R
-import nl.narvekar.abhishek.student649744.api.NewsApi
-import nl.narvekar.abhishek.student649744.api.RetrofitInstance
-import nl.narvekar.abhishek.student649744.data.RegisterUserResponse
 import nl.narvekar.abhishek.student649744.data.User
 import nl.narvekar.abhishek.student649744.fragments.components.SuccessDialog
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.RegisterViewModel
-import okhttp3.Route
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
@@ -40,8 +30,8 @@ fun RegisterScreen(
     navController: NavController,
     registerViewModel: RegisterViewModel
 ) {
-    val showDialog = remember { mutableStateOf(false) }
-
+    //val showDialog = remember { mutableStateOf(false) }
+    val showDialog = registerViewModel.showMessageOnRegister
     if (showDialog.value) {
         SuccessDialog(setShowDialog = {
             showDialog.value = it
@@ -120,39 +110,3 @@ fun RegisterScreen(
         }
     }
 }
-// https://medium.com/@yilmazvolkan/kotlin-sign-up-and-sign-in-with-retrofit-tutorial-c96ca14f06c4
-
-//private fun signup(
-//    context: Context,
-//    user: User,
-//    navController: NavController
-//) {
-//    //val retrofitInstance = RetrofitInstance.getRetrofitInstance().create(NewsApi::class.java)
-//    val retrofitInstance = NewsApi.getInstance()
-//
-//    retrofitInstance.postANewUser(user).enqueue(object :
-//        Callback<RegisterUserResponse> {
-//            override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
-//                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun onResponse(
-//                call: Call<RegisterUserResponse>,
-//                response: Response<RegisterUserResponse>
-//            ) {
-//                if (response.code() == 201) {
-//                    Toast.makeText(context, "Registeration Successful!", Toast.LENGTH_SHORT).show()
-//
-//                    navController.navigate(Routes.Login.route) {
-//                        popUpTo(Routes.Register.route) {
-//                            inclusive = true
-//                        }
-//                    }
-//                }
-//                else {
-//                    Toast.makeText(context, "Registration failure", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//    )
-//}

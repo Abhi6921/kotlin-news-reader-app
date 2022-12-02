@@ -2,8 +2,7 @@ package nl.narvekar.abhishek.student649744.viewModel
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import nl.narvekar.abhishek.student649744.Session
-import nl.narvekar.abhishek.student649744.api.NewsApi
+import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.Article
 import nl.narvekar.abhishek.student649744.data.ArticleList

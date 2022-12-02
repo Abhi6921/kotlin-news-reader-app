@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">student649744</string>
 
+    <!--No Internet Connection Strings-->
+    <string name="ui_no_internet_connection">No Internet Connection!</string>
+    <string name="ui_connect_to_wifi_or_mobile_data_message">Please turn on your Wi-Fi or mobile data, then try again</string>
+
     <!--Login Strings-->
     <string name="ui_text_login_title">Login here</string>
     <string name="ui_text_login_button">Login</string>
@@ -17,6 +21,11 @@
     <string name="ui_back_to_login_text">Back to login</string>
     <string name="ui_register_successful_message">Registration Successful!</string>
     <string name="ui_register_failure_message">Registeration Failure!:</string>
+
+    <!--Register Dialog Strings-->
+    <string name="ui_dialog_title_text">Message</string>
+    <string name="ui_success_dialog_message">User Registered Successfully</string>
+    <string name="ui_dismiss_button_text">Dismiss</string>
 
     <!--HomeScreen Strings-->
     <string name="ui_home_screen_title">News Articles</string>

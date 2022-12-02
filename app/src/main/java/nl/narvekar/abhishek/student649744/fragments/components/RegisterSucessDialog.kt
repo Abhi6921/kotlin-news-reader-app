@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -14,48 +15,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-
+import androidx.navigation.NavController
+import nl.narvekar.abhishek.student649744.R
+import nl.narvekar.abhishek.student649744.navigation.Routes
+import okhttp3.Route
 
 
 @Composable
 fun SuccessDialog(setShowDialog: (Boolean) -> Unit) {
 
-    Dialog(onDismissRequest = {  }) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colors.primary
-        ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Success! User Registered",
-                            style = TextStyle(
-                                fontSize = 24.sp,
-                                fontFamily = FontFamily.Default,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colors.onPrimary
-                            ),
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
-                            Button(onClick = {
-                                //setShowDialog(false)
-                            },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant)
-                            ) {
-                                Text(text = "Continue to login")
-                            }
-                        }
-                    }
-                }
+    AlertDialog(
+        onDismissRequest = {  },
+        title = {
+            Text(text = stringResource(R.string.ui_dialog_title_text))
+        },
+        text = {
+            Text(text = stringResource(R.string.ui_success_dialog_message))
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                setShowDialog(false)
+            }) {
+                Text(text = stringResource(R.string.ui_dismiss_button_text))
             }
         }
-    }
+    )
 }

@@ -1,11 +1,8 @@
 package nl.narvekar.abhishek.student649744.api
 
-import nl.narvekar.abhishek.student649744.Constants.BASE_URL
 import nl.narvekar.abhishek.student649744.data.*
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 
@@ -31,7 +28,7 @@ interface NewsApi {
     @GET("api/Articles/liked")
     suspend fun getAllLikedArticles(@Header("x-authtoken") authToken: String) : ArticleList
 
-    @PUT("api/articles/{id}/like")
+    @PUT("api/Articles/{id}/like")
     suspend fun addLikedArticle(
         @Header("x-authtoken") authToken: String,
         @Path("id") articleId: Int
