@@ -17,7 +17,6 @@ import retrofit2.Response
 class RegisterViewModel : ViewModel() {
 
     private val retrofit = RetrofitInstance.getInstance()
-    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     fun signup(
         context: Context,

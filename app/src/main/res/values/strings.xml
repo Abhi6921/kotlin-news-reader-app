@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">student649744</string>
 
+    <!--No Internet Connection Strings-->
+    <string name="ui_no_internet_connection">No Internet Connection!</string>
+    <string name="ui_connect_to_wifi_or_mobile_data_message">Please turn on your Wi-Fi or mobile data, then try again</string>
+
     <!--Login Strings-->
     <string name="ui_text_login_title">Login here</string>
     <string name="ui_text_login_button">Login</string>

@@ -24,7 +24,8 @@ fun NavigationScreen(
     favoritesViewModel: FavoritesViewModel,
     articleDetailViewModel: ArticleDetailViewModel,
     loginViewModel: LoginViewModel,
-    registerViewModel: RegisterViewModel
+    registerViewModel: RegisterViewModel,
+    isNetworkAvailable: Boolean
 ) {
     val navController = rememberNavController()
     val AuthToken = Session.getAuthToken()
@@ -51,7 +52,8 @@ fun NavigationScreen(
             HomeScreen(
                 navController,
                 articleViewModel,
-                loginViewModel
+                loginViewModel,
+                isNetworkAvailable
             )
         }
         composable(

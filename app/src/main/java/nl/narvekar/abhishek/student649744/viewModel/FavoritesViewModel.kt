@@ -24,7 +24,6 @@ class FavoritesViewModel : ViewModel() {
     var isLoading = mutableStateOf(false)
 
     private val retrofit = RetrofitInstance.getInstance()
-    //private val apiInterface = retrofit.create(NewsApi::class.java)
 
     fun getFavoriteArticles() {
         viewModelScope.launch {

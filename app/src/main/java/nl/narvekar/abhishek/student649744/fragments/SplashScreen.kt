@@ -24,8 +24,6 @@ import nl.narvekar.abhishek.student649744.navigation.Routes
 @Composable
 fun SplashScreen(navController: NavController) {
 
-    // if token is empty show splash screen and then navigate to home screen
-    // else show splash screen and then navigate to Home screen
     val authToken = Session.getAuthToken()
     val scale = remember {
         Animatable(0f)
