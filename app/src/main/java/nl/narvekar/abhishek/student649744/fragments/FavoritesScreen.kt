@@ -88,12 +88,9 @@ fun FavoritesScreen(
                 }
             }
         }
-
     )
 }
 
-//https://www.nu.nl/eindhoven/6050288/man-bijt-agent-in-been-na-aanhouding-in-woning-in-gemert.html
-//@Preview(showBackground = true)
 @Composable
 fun FavoritesArticleItem(
     article: Article,
