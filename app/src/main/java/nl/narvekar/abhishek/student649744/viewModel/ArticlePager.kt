@@ -45,7 +45,4 @@ class ArticlePager: PagingSource<Int, Article>() {
             else -> Result.failure(IllegalStateException("something went wrong"))
         }
     }
-
-
-
 }
