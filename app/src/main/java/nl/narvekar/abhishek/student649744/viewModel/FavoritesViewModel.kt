@@ -7,17 +7,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
 import nl.narvekar.abhishek.student649744.data.ArticleList
 
 class FavoritesViewModel : ViewModel() {
-    var favoritesListResponse: ArticleList by mutableStateOf(ArticleList())
+
+
     var errorMessage: String by mutableStateOf("")
     var isLoading = mutableStateOf(false)
 
     private val retrofit = RetrofitInstance.getInstance()
+
+    private val mutableFavoriteArticle = MutableStateFlow<ArticleList?>(null)
+    var mutableFavoriteArticleState: StateFlow<ArticleList?> = mutableFavoriteArticle
 
     fun getFavoriteArticles() {
         viewModelScope.launch {
@@ -25,7 +31,8 @@ class FavoritesViewModel : ViewModel() {
                 isLoading.value = true
                 val authToken = Session.getAuthToken()
                 val articles = retrofit.getAllLikedArticles(authToken)
-                favoritesListResponse = articles
+                //favoritesListResponse = articles
+                mutableFavoriteArticle.tryEmit(articles)
                 isLoading.value = false
             } catch (e: Exception) {
                 errorMessage = e.message.toString()

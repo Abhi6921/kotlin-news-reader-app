@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.collect
@@ -52,14 +53,16 @@ import java.util.*
 fun ArticleDetailScreen(
     navController: NavController,
     detailId: Int,
-    favoritesViewModel: FavoritesViewModel,
-   articleDetailViewModel: ArticleDetailViewModel
+    favoritesViewModel: FavoritesViewModel = viewModel(),
+   articleDetailViewModel: ArticleDetailViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
-    val article: Article? = articleDetailViewModel.getArticleById(detailId).results.find {
-        it.Id == detailId
+
+    val articleDetail by articleDetailViewModel.mutableArticleState.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        articleDetailViewModel.getArticleById(detailId)
     }
-    
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
@@ -81,16 +84,21 @@ fun ArticleDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                            val share = Intent.createChooser(Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, article?.Url)
-                                putExtra(Intent.EXTRA_SUBJECT, "Breaking News!")
-                                putExtra(Intent.EXTRA_TITLE, article?.Title)
-                                type = "message/rfc822"
-                            }, null)
-
-                        startActivity(context, Intent.createChooser(share, null), null)
+                    IconButton(
+                        onClick = {
+                            articleDetail?.let { articleDetail ->
+                                var share: Intent? = null
+                                for (article in articleDetail.results) {
+                                     share = Intent.createChooser(Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, article.Url)
+                                        putExtra(Intent.EXTRA_SUBJECT, "Breaking News!")
+                                        putExtra(Intent.EXTRA_TITLE, article.Title)
+                                        type = "message/rfc822"
+                                    }, null)
+                                }
+                                startActivity(context, Intent.createChooser(share, null), null)
+                            }
                     }) {
                         Icon(Icons.Default.Share, contentDescription = null)
                     }
@@ -98,77 +106,79 @@ fun ArticleDetailScreen(
             )
         },
         content = {
-            if(article != null) {
-                Column(modifier = Modifier.verticalScroll(scrollState)) {
-                    AsyncImage(
-                        model = article.Image,
-                        contentDescription = stringResource(R.string.ui_article_image),
-                        modifier = Modifier.size(500.dp),
-                        contentScale = ContentScale.Crop,
-                        placeholder =  painterResource(R.drawable.placeholder)
-                    )
-                    Text(
-                        text = article.Title,
-                        modifier = Modifier.padding(4.dp),
-                        style = MaterialTheme.typography.h6,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold
-                    )
+            articleDetail?.let { articleDetail ->
 
-                    FavoriteButton(favoritesViewModel, article)
-
-                    Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    Text(
-                        text = article.Summary,
-                        modifier = Modifier.padding(4.dp),
-                        style = MaterialTheme.typography.body1,
-                        fontFamily = FontFamily.SansSerif,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    ClickableText(
-                        text = AnnotatedString(stringResource(R.string.ui_open_in_borwser_text)),
-                        style = TextStyle(
-                            color = MaterialTheme.colors.onSurface,
-                            fontSize = 16.sp
-                        ),
-                        onClick = {
-                            uriHandler.openUri(article.Url)
-                        },
-                    )
-                    Divider(modifier = Modifier.padding(bottom = 4.dp))
-
-                    var articleDate = LocalDateTime.parse(article.PublishDate)
-                    var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.date_time_formatter), Locale.GERMANY)
-                    var formattedArticleDate = articleDate.format(formatter)
-
-                    Text(
-                        text = stringResource(R.string.ui_article_date_time, formattedArticleDate),
-                        modifier = Modifier.padding(4.dp),
-                        style = MaterialTheme.typography.body1,
-                        fontFamily = FontFamily.Monospace
-                    )
-                    Divider(modifier = Modifier.padding(bottom = 4.dp))
-                    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                        Text(
-                            text = stringResource(R.string.ui_categories_text),
-                            modifier = Modifier.padding(4.dp),
-                            style = MaterialTheme.typography.body1
+                for (article in articleDetail.results) {
+                    Column(modifier = Modifier.verticalScroll(scrollState)) {
+                        AsyncImage(
+                            model = article.Image,
+                            contentDescription = stringResource(R.string.ui_article_image),
+                            modifier = Modifier.size(500.dp),
+                            contentScale = ContentScale.Crop,
+                            placeholder =  painterResource(R.drawable.placeholder)
                         )
-                        article.Categories.forEach { Item ->
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = Item.Name,
-                                modifier = Modifier.padding(4.dp),
-                                style = MaterialTheme.typography.body1,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
-                    }
-                    var count: Int = 0
-                    article.Related.forEach { articleUrl ->
-                        count += 1
+                        Text(
+                            text = article.Title,
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.h6,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        FavoriteButton(favoritesViewModel, article)
+
+                        Divider(modifier = Modifier.padding(bottom = 4.dp))
+                        Text(
+                            text = article.Summary,
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.body1,
+                            fontFamily = FontFamily.SansSerif,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Divider(modifier = Modifier.padding(bottom = 4.dp))
                         ClickableText(
+                            text = AnnotatedString(stringResource(R.string.ui_open_in_borwser_text)),
+                            style = TextStyle(
+                                color = MaterialTheme.colors.onSurface,
+                                fontSize = 16.sp
+                            ),
+                            onClick = {
+                                uriHandler.openUri(article.Url)
+                            },
+                        )
+                        Divider(modifier = Modifier.padding(bottom = 4.dp))
+
+                        var articleDate = LocalDateTime.parse(article.PublishDate)
+                        var formatter = DateTimeFormatter.ofPattern(stringResource(R.string.date_time_formatter), Locale.GERMANY)
+                        var formattedArticleDate = articleDate.format(formatter)
+
+                        Text(
+                            text = stringResource(R.string.ui_article_date_time, formattedArticleDate),
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.body1,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Divider(modifier = Modifier.padding(bottom = 4.dp))
+                        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                            Text(
+                                text = stringResource(R.string.ui_categories_text),
+                                modifier = Modifier.padding(4.dp),
+                                style = MaterialTheme.typography.body1
+                            )
+                            article.Categories.forEach { Item ->
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = Item.Name,
+                                    modifier = Modifier.padding(4.dp),
+                                    style = MaterialTheme.typography.body1,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                        }
+                        var count: Int = 0
+                        article.Related.forEach { articleUrl ->
+                            count += 1
+                            ClickableText(
                                 modifier = Modifier.padding(4.dp),
                                 text = AnnotatedString(stringResource(R.string.ui_view_related_articles, count)),
                                 style = TextStyle(
@@ -178,12 +188,12 @@ fun ArticleDetailScreen(
                                 onClick = {
                                     uriHandler.openUri(articleUrl)
                                 }
-                        )
+                            )
+                        }
                     }
                 }
-
             }
-            else if (articleLoading)  {
+             if (articleLoading)  {
                 Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -191,20 +201,6 @@ fun ArticleDetailScreen(
                         CircularProgressIndicator(
                             color = MaterialTheme.colors.onSurface
                         )
-                }
-            }
-            else {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(R.string.ui_no_article_description),
-                        modifier = Modifier.padding(4.dp),
-                        style = MaterialTheme.typography.body1,
-                        fontFamily = FontFamily.Monospace
-                    )
                 }
             }
         }

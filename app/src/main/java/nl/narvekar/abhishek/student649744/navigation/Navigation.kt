@@ -17,15 +17,9 @@ const val ARTICLE_ID_KEY = "Id"
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationScreen(
-    articleViewModel: ArticleViewModel,
-    favoritesViewModel: FavoritesViewModel,
-    articleDetailViewModel: ArticleDetailViewModel,
-    loginViewModel: LoginViewModel,
-    registerViewModel: RegisterViewModel,
     isNetworkAvailable: Boolean
 ) {
     val navController = rememberNavController()
-    val AuthToken = Session.getAuthToken()
     NavHost(
         navController = navController,
         startDestination =  Routes.getDestination()
@@ -35,21 +29,17 @@ fun NavigationScreen(
         }
         composable(route = Routes.Login.route) {
             LoginScreen(
-                navController = navController,
-                loginViewModel = loginViewModel
+                navController = navController
             )
         }
         composable(route = Routes.Register.route) {
             RegisterScreen(
-                navController = navController,
-                registerViewModel = registerViewModel
+                navController = navController
             )
         }
         composable(route = Routes.Home.route) {
             HomeScreen(
                 navController,
-                articleViewModel,
-                loginViewModel,
                 isNetworkAvailable
             )
         }
@@ -61,19 +51,13 @@ fun NavigationScreen(
         ) { navBackStackEntry ->
             ArticleDetailScreen(
                 navController,
-                navBackStackEntry.arguments!!.getInt(ARTICLE_ID_KEY),
-                favoritesViewModel,
-                articleDetailViewModel
+                navBackStackEntry.arguments!!.getInt(ARTICLE_ID_KEY)
             )
         }
 
         composable(route = Routes.Favorites.route) {
             FavoritesScreen(
-                navController,
-                favoritesViewModel.favoritesListResponse.results,
-                articleViewModel,
-                favoritesViewModel,
-                loginViewModel
+                navController
             )
         }
     }

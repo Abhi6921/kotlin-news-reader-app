@@ -9,15 +9,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.Article
+import nl.narvekar.abhishek.student649744.data.ArticleList
 import nl.narvekar.abhishek.student649744.navigation.BottomBarNavigation
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.ArticleViewModel
@@ -27,15 +33,14 @@ import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 @Composable
 fun FavoritesScreen(
     navController: NavController,
-    articles: List<Article>,
-    articleViewModel: ArticleViewModel,
-    favoritesViewModel: FavoritesViewModel,
-    loginViewModel: LoginViewModel
+    favoritesViewModel: FavoritesViewModel = viewModel()
 ) {
-
     favoritesViewModel.getFavoriteArticles()
     var isLoading = favoritesViewModel.isLoading.value
     val coroutineScope = rememberCoroutineScope()
+
+    val favoriteArticles by favoritesViewModel.mutableFavoriteArticleState.collectAsState()
+
 
     Scaffold(topBar = {
         TopAppBar(
@@ -43,50 +48,43 @@ fun FavoritesScreen(
             title = {
                 Text(stringResource(R.string.ui_topbar_favorites_title))
             },
-            backgroundColor = MaterialTheme.colors.primary,
-            actions = {
-                IconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            loginViewModel.signOut(navController)
-                        }
-                    }
-                ) {
-                    Icon(Icons.Filled.ExitToApp, null)
-                }
-            })
+            backgroundColor = MaterialTheme.colors.primary
+        )
     },
         bottomBar = {
             BottomBarNavigation(navController = navController)
         },
         content = { innerPadding ->
-            if(articles.isNotEmpty()) {
-                LazyColumn(Modifier.padding(innerPadding)) {
-                    items(articles) { article ->
-                        FavoritesArticleItem(article = article, isLiked = article.IsLiked) {
-                            navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
+            favoriteArticles?.let { articles ->
+                if(articles.results.isNotEmpty()) {
+                    LazyColumn(Modifier.padding(innerPadding)) {
+                        items(articles.results) { article ->
+                            FavoritesArticleItem(article = article, isLiked = article.IsLiked) {
+                                navController.navigate(Routes.ArticleDetail.route + "/${it.Id}")
+                            }
                         }
                     }
                 }
-            }
-            else {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
+                    }
+                }
+                if (articles.results.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = stringResource(R.string.ui_no_favorite_articles))
+                    }
                 }
             }
 
-            if (articles.isEmpty()) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = stringResource(R.string.ui_no_favorite_articles))
-                }
-            }
+
         }
     )
 }

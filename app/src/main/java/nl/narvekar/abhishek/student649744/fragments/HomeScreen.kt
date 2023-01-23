@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -36,9 +37,9 @@ import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
-    articleViewModel: ArticleViewModel,
-    loginViewModel: LoginViewModel,
-    isNetworkAvailable: Boolean
+    isNetworkAvailable: Boolean,
+    articleViewModel: ArticleViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
     if (!isNetworkAvailable) {
         Column(
@@ -61,13 +62,34 @@ fun HomeScreen(
         }
     }
     else {
+        val coroutineScope = rememberCoroutineScope()
+        val context = LocalContext.current
         val articles = articleViewModel.articles.collectAsLazyPagingItems()
-        Scaffold(topBar = {
-            TopAppBarForArticles(
-                navController = navController,
-                title = stringResource(R.string.ui_home_screen_title),
-                articleViewModel,
-                loginViewModel
+        Scaffold(
+
+        topBar = {
+            TopAppBar(
+                elevation = 4.dp,
+                title = {
+                    Text(text = stringResource(id = R.string.ui_home_screen_title))
+                },
+                backgroundColor = MaterialTheme.colors.primary,
+                actions = {
+                    IconButton(onClick = {
+                        articles.refresh()
+                    }) {
+
+                        Icon(Icons.Filled.Refresh, null)
+                    }
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            loginViewModel.signOut(navController)
+                        }
+
+                    }) {
+                        Icon(Icons.Filled.ExitToApp, contentDescription = null)
+                    }
+                }
             )
         },
             bottomBar = {
@@ -126,40 +148,6 @@ fun HomeScreen(
             }
         )
     }
-}
-
-@Composable
-fun TopAppBarForArticles(
-    navController: NavController,
-    title: String,
-    articleViewModel: ArticleViewModel,
-    loginViewModel: LoginViewModel
-) {
-    val articles = articleViewModel.articles.collectAsLazyPagingItems()
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    androidx.compose.material.TopAppBar(
-        elevation = 4.dp,
-        title = {
-            Text(text = title)
-        },
-        backgroundColor = MaterialTheme.colors.primary,
-        actions = {
-            IconButton(onClick = {
-               articles.refresh()
-            }) {
-                // refresh icon here
-                Icon(Icons.Filled.Refresh, null)
-            }
-            IconButton(onClick = {
-                coroutineScope.launch {
-                    loginViewModel.signOut(navController)
-                }
-                //loginViewModel.logout(sharedPreferences, navController)
-            }) {
-                Icon(Icons.Filled.ExitToApp, contentDescription = null)
-            }
-        })
 }
 
 

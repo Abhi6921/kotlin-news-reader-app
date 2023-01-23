@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.User
@@ -28,7 +29,7 @@ import nl.narvekar.abhishek.student649744.viewModel.RegisterViewModel
 fun RegisterScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    registerViewModel: RegisterViewModel
+    registerViewModel: RegisterViewModel = viewModel()
 ) {
     //val showDialog = remember { mutableStateOf(false) }
     val showDialog = registerViewModel.showMessageOnRegister

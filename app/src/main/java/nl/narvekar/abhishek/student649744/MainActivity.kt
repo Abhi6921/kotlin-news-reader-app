@@ -23,11 +23,11 @@ import nl.narvekar.abhishek.student649744.viewModel.*
 
 class MainActivity : ComponentActivity() {
     // this commit is from MAIN branch
-    private val favoritesViewModel by viewModels<FavoritesViewModel>()
-    private val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
-    private val loginViewModel by viewModels<LoginViewModel>()
-    private val registerViewModel by viewModels<RegisterViewModel>()
-    private val articleViewModel by viewModels<ArticleViewModel>()
+    //private val favoritesViewModel by viewModels<FavoritesViewModel>()
+    //private val articleDetailViewModel by viewModels<ArticleDetailViewModel>()
+    //private val loginViewModel by viewModels<LoginViewModel>()
+    //private val registerViewModel by viewModels<RegisterViewModel>()
+    //private val articleViewModel by viewModels<ArticleViewModel>()
 
     lateinit var connectionLiveData: NetworkConnectionLiveData
 
@@ -42,14 +42,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
                     //CheckInternetConnection(isNetworkAvailable)
-                    NavigationScreen(
-                        articleViewModel,
-                        favoritesViewModel,
-                        articleDetailViewModel,
-                        loginViewModel,
-                        registerViewModel,
-                        isNetworkAvailable
-                    )
+                    NavigationScreen(isNetworkAvailable)
                 }
             }
         }
