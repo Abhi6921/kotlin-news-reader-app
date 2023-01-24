@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,18 +29,25 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.R
 import nl.narvekar.abhishek.student649744.data.User
+import nl.narvekar.abhishek.student649744.fragments.components.LoginFailureDialog
 import nl.narvekar.abhishek.student649744.navigation.Routes
 import nl.narvekar.abhishek.student649744.viewModel.LoginViewModel
 
-//@Preview(showBackground = true)
+
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     loginViewModel: LoginViewModel = viewModel()
 ) {
+
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val showLoginFailureDialog = loginViewModel.showLoginFailureDialog.value
+    val isLoading = loginViewModel.isLoading.value
+    if (showLoginFailureDialog) {
+        LoginFailureDialog(alertBoxDialog = loginViewModel.showLoginFailureDialog)
+    }
 
     Column(
         modifier = Modifier.padding(20.dp),
@@ -100,7 +108,6 @@ fun LoginScreen(
                                     ), navController
                                 )
                             }
-
                         }
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
@@ -126,6 +133,10 @@ fun LoginScreen(
                 ) {
                     Text(text = stringResource(R.string.ui_register_here_button_text), color = Color.White)
                 }
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+            if (isLoading) {
+                CircularProgressIndicator(color = MaterialTheme.colors.onSurface)
             }
     }
 }

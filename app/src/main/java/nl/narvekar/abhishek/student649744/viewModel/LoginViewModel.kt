@@ -3,10 +3,12 @@ package nl.narvekar.abhishek.student649744.viewModel
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.narvekar.abhishek.student649744.utils.Session
 import nl.narvekar.abhishek.student649744.api.RetrofitInstance
@@ -22,11 +24,15 @@ class LoginViewModel : ViewModel() {
 
     private val retrofit = RetrofitInstance.getInstance()
 
+    val showLoginFailureDialog = mutableStateOf(false)
+
+    var isLoading = mutableStateOf(false)
+
     suspend fun loginUser(context: Context,
               user: User,
               navController: NavController
     ) {
-
+        isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             retrofit.loginUser(user).enqueue(
                 object : Callback<LoginResponse> {
@@ -42,7 +48,7 @@ class LoginViewModel : ViewModel() {
                             if (authToken != null) {
                                 storeUserCredentials(user.UserName, user.Password, authToken)
                             }
-
+                            isLoading.value = false
                             Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_successful_message), Toast.LENGTH_SHORT).show()
                             navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Login.route) {
@@ -51,7 +57,9 @@ class LoginViewModel : ViewModel() {
                             }
                         }
                         else {
-                            Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_failure_message), Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(context, context.getString(nl.narvekar.abhishek.student649744.R.string.ui_login_failure_message), Toast.LENGTH_SHORT).show()
+                            isLoading.value = false
+                            showLoginFailureDialog.value = true
                         }
                     }
 
