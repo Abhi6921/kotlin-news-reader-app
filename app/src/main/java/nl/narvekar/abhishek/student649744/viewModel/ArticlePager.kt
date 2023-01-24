@@ -31,7 +31,7 @@ class ArticlePager: PagingSource<Int, Article>() {
     private suspend fun fetch(startkey: Int, loadSize: Int) : Result<ArticleList> {
 
         val authToken = Session.getAuthToken()
-        val response = retrofit.getAllArticles(authToken, loadSize.coerceIn(1, 30))
+        val response = retrofit.getAllArticles(authToken, loadSize)
 
         return when {
             response.isSuccessful -> {

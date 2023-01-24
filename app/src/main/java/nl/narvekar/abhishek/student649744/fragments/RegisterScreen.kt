@@ -4,16 +4,19 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,7 +34,7 @@ fun RegisterScreen(
     navController: NavController,
     registerViewModel: RegisterViewModel = viewModel()
 ) {
-    //val showDialog = remember { mutableStateOf(false) }
+
     val showDialog = registerViewModel.showMessageOnRegister
     if (showDialog.value) {
         SuccessDialog(setShowDialog = {
@@ -46,6 +49,7 @@ fun RegisterScreen(
         val context = LocalContext.current
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
+        var passwordVisible by remember { mutableStateOf(false) }
 
        // val context = LocalContext.current
 
@@ -61,6 +65,20 @@ fun RegisterScreen(
         OutlinedTextField(
             label = { Text(text = stringResource(R.string.ui_password_label), color = MaterialTheme.colors.onSurface) },
             value = password.value,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (passwordVisible) {
+                    Icons.Default.Visibility
+                } else {
+                    Icons.Filled.VisibilityOff
+                }
+                val description = if (passwordVisible) "Hide password" else "show password"
+                IconButton(onClick = { passwordVisible =! passwordVisible }) {
+                    Icon(imageVector = image, contentDescription = description, modifier = Modifier
+                        .size(50.dp)
+                        .padding(top = 10.dp, bottom = 10.dp))
+                }
+            },
             onValueChange = { password.value = it }
         )
 

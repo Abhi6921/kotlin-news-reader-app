@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,6 +48,7 @@ fun LoginScreen(
     ) {
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
+        var passwordVisible by remember { mutableStateOf(false) }
 
             Text(
                 text = stringResource(R.string.ui_text_login_title),
@@ -63,7 +65,20 @@ fun LoginScreen(
             OutlinedTextField(
                 label = { Text(text = stringResource(R.string.ui_password_label), color = MaterialTheme.colors.onSurface) },
                 value = password.value,
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisible) { VisualTransformation.None } else { PasswordVisualTransformation() },
+                trailingIcon = {
+                    val image = if (passwordVisible) {
+                        Icons.Default.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    }
+                    val description = if (passwordVisible) "Hide password" else "show password"
+                    IconButton(onClick = { passwordVisible =! passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = description, modifier = Modifier
+                            .size(50.dp)
+                            .padding(top = 10.dp, bottom = 10.dp))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                 onValueChange = { password.value = it })
